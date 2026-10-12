@@ -1,0 +1,8 @@
+# Isolated namespace for the failure drills so the real app is never touched.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pp-lab
+  labels:
+    purpose: troubleshooting-lab
+    pod-security.kubernetes.io/enforce: restricted

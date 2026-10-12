@@ -1,0 +1,32 @@
+# recorded 2026-10-13 01:02:42 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ scripts/troubleshoot.sh apply 2 161f84e908fd81435087c2ad7792182861675c70 && kubectl -n pp-lab rollout status deploy/lab-web --timeout=120s
+namespace/pp-lab unchanged
+deployment.apps/lab-web created
+service/lab-web created
+Waiting for deployment "lab-web" rollout to finish: 0 of 2 updated replicas are available...
+Waiting for deployment "lab-web" rollout to finish: 1 of 2 updated replicas are available...
+deployment "lab-web" successfully rolled out
+
+# recorded 2026-10-13 01:02:56 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ kubectl -n pp-lab exec deploy/lab-web -- wget -q -T 5 -O- http://lab-web/healthz; echo exit=$?
+wget: can't connect to remote host (10.96.129.10): Connection refused
+command terminated with exit code 1
+exit=1
+
+# recorded 2026-10-13 01:02:57 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ kubectl -n pp-lab get endpointslices -l kubernetes.io/service-name=lab-web && kubectl -n pp-lab get svc lab-web -o jsonpath='{.spec.selector}{"\n"}' && kubectl -n pp-lab get pods -l app=lab-web --show-labels
+NAME            ADDRESSTYPE   PORTS     ENDPOINTS   AGE
+lab-web-tmjfs   IPv4          <unset>   <unset>     15s
+{"app":"lab-webb"}
+NAME                       READY   STATUS    RESTARTS   AGE   LABELS
+lab-web-7fcf6dc785-rmjr4   1/1     Running   0          16s   app=lab-web,pod-template-hash=7fcf6dc785
+lab-web-7fcf6dc785-xvv74   1/1     Running   0          16s   app=lab-web,pod-template-hash=7fcf6dc785
+
+# recorded 2026-10-13 01:02:58 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ kubectl -n pp-lab patch svc lab-web --type merge -p '{"spec":{"selector":{"app":"lab-web"}}}' && sleep 3 && kubectl -n pp-lab get endpointslices -l kubernetes.io/service-name=lab-web && kubectl -n pp-lab exec deploy/lab-web -- wget -q -T 5 -O- http://lab-web/healthz; echo exit=$?
+service/lab-web patched
+NAME            ADDRESSTYPE   PORTS   ENDPOINTS                 AGE
+lab-web-tmjfs   IPv4          8080    10.244.0.27,10.244.0.31   19s
+ok
+exit=0
+

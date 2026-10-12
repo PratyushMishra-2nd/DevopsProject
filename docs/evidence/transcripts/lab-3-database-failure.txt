@@ -1,0 +1,20 @@
+# recorded 2026-10-13 01:03:08 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ scripts/troubleshoot.sh apply 3 161f84e908fd81435087c2ad7792182861675c70
+namespace/pp-lab unchanged
+job.batch/lab-migrate created
+
+# recorded 2026-10-13 01:03:58 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ kubectl -n pp-lab get jobs,pods -l app=lab-migrate; kubectl -n pp-lab get job lab-migrate -o jsonpath='{.status.failed} failed attempts{"\n"}'; kubectl -n pp-lab logs -l app=lab-migrate --tail=4 | tail -4
+NAME                    STATUS    COMPLETIONS   DURATION   AGE
+job.batch/lab-migrate   Running   0/1           51s        51s
+
+NAME                    READY   STATUS    RESTARTS   AGE
+pod/lab-migrate-25dg2   0/1     Error     0          32s
+pod/lab-migrate-fp5gb   0/1     Error     0          51s
+pod/lab-migrate-q4828   1/1     Running   0          4s
+2 failed attempts
+  File "/opt/venv/lib/python3.12/site-packages/psycopg/_conninfo_attempts.py", line 55, in conninfo_attempts
+    raise last_exc
+sqlalchemy.exc.OperationalError: (psycopg.OperationalError) failed to resolve host 'pantrypulse-postgres-typo': [Errno -5] No address associated with hostname
+(Background on this error at: https://sqlalche.me/e/21/e3q8)
+

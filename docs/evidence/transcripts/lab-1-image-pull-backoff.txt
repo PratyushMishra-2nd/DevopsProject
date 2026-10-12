@@ -1,0 +1,34 @@
+# recorded 2026-10-13 01:01:48 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ scripts/troubleshoot.sh apply 1 161f84e908fd81435087c2ad7792182861675c70
+namespace/pp-lab created
+deployment.apps/lab-broken-image created
+
+# recorded 2026-10-13 01:02:28 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ kubectl -n pp-lab get pods -l app=lab-broken-image
+NAME                                READY   STATUS         RESTARTS   AGE
+lab-broken-image-84854cf974-v7rhw   0/1     ErrImagePull   0          40s
+
+# recorded 2026-10-13 01:02:28 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ kubectl -n pp-lab describe pod -l app=lab-broken-image | sed -n '/Events:/,$p'
+Events:
+  Type     Reason     Age                From               Message
+  ----     ------     ----               ----               -------
+  Normal   Scheduled  41s                default-scheduler  Successfully assigned pp-lab/lab-broken-image-84854cf974-v7rhw to pantrypulse-control-plane
+  Warning  Failed     32s                kubelet            Failed to pull image "ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:v9.9.9-does-not-exist": failed to pull and unpack image "ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:v9.9.9-does-not-exist": failed to resolve reference "ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:v9.9.9-does-not-exist": failed to do request: Head "https://ghcr.io/v2/pratyushmishra-2nd/pantrypulse-frontend/manifests/v9.9.9-does-not-exist": dial tcp: lookup ghcr.io on 192.168.65.254:53: server misbehaving
+  Normal   Pulling    22s (x2 over 40s)  kubelet            Pulling image "ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:v9.9.9-does-not-exist"
+  Warning  Failed     21s (x2 over 32s)  kubelet            Error: ErrImagePull
+  Warning  Failed     21s                kubelet            Failed to pull image "ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:v9.9.9-does-not-exist": rpc error: code = NotFound desc = failed to pull and unpack image "ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:v9.9.9-does-not-exist": failed to resolve reference "ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:v9.9.9-does-not-exist": ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:v9.9.9-does-not-exist: not found
+  Normal   BackOff    6s (x2 over 32s)   kubelet            Back-off pulling image "ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:v9.9.9-does-not-exist"
+  Warning  Failed     6s (x2 over 32s)   kubelet            Error: ImagePullBackOff
+
+# recorded 2026-10-13 01:02:29 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ kubectl -n pp-lab set image deploy/lab-broken-image web=ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:161f84e908fd81435087c2ad7792182861675c70 && kubectl -n pp-lab rollout status deploy/lab-broken-image --timeout=180s && kubectl -n pp-lab get pods -l app=lab-broken-image
+deployment.apps/lab-broken-image image updated
+Waiting for deployment "lab-broken-image" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "lab-broken-image" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "lab-broken-image" rollout to finish: 1 old replicas are pending termination...
+deployment "lab-broken-image" successfully rolled out
+NAME                                READY   STATUS        RESTARTS   AGE
+lab-broken-image-5d749f9c5b-45ncq   1/1     Running       0          1s
+lab-broken-image-84854cf974-v7rhw   0/1     Terminating   0          42s
+

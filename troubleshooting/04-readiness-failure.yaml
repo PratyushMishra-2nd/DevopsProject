@@ -1,0 +1,102 @@
+# LAB 4 - Running but never Ready
+# The API container starts (liveness /health is fine) but /ready returns 503
+# because its database is empty: Alembic never ran. Kubernetes keeps the pod
+# out of the Service endpoints, so users never reach a half-working API.
+# Symptom: STATUS Running, READY 0/1; endpoints empty.
+# Diagnose: kubectl -n pp-lab describe pod -l app=lab-api   (Readiness probe failed: 503)
+#           kubectl -n pp-lab exec deploy/lab-api -- python -c "...urlopen('http://127.0.0.1:8000/ready')"
+# Fix: run the migrations (see troubleshooting/README.md).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab-db
+  namespace: pp-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: lab-db }
+  template:
+    metadata:
+      labels: { app: lab-db }
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 70
+        fsGroup: 70
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: postgres
+          image: postgres:17-alpine3.24
+          env:
+            - { name: POSTGRES_DB, value: lab }
+            - { name: POSTGRES_USER, value: lab }
+            - { name: POSTGRES_PASSWORD, value: lab-only-throwaway }
+            - { name: PGDATA, value: /var/lib/postgresql/data/pgdata }
+          ports: [{ containerPort: 5432 }]
+          resources:
+            requests: { cpu: 20m, memory: 64Mi }
+            limits: { cpu: 300m, memory: 256Mi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: { drop: ["ALL"] }
+          volumeMounts:
+            - { name: data, mountPath: /var/lib/postgresql/data }
+            - { name: run, mountPath: /var/run/postgresql }
+      volumes:
+        - { name: data, emptyDir: {} }
+        - { name: run, emptyDir: {} }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lab-db
+  namespace: pp-lab
+spec:
+  selector: { app: lab-db }
+  ports: [{ port: 5432 }]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab-api
+  namespace: pp-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: lab-api }
+  template:
+    metadata:
+      labels: { app: lab-api }
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: api
+          image: ghcr.io/pratyushmishra-2nd/pantrypulse-backend:__SHA__
+          ports: [{ name: http, containerPort: 8000 }]
+          env:
+            - name: DATABASE_URL
+              value: postgresql+psycopg://lab:lab-only-throwaway@lab-db:5432/lab
+          readinessProbe:
+            httpGet: { path: /ready, port: http }
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /health, port: http }
+            periodSeconds: 15
+          resources:
+            requests: { cpu: 20m, memory: 96Mi }
+            limits: { cpu: 300m, memory: 256Mi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: { drop: ["ALL"] }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lab-api
+  namespace: pp-lab
+spec:
+  selector: { app: lab-api }
+  ports: [{ name: http, port: 8000, targetPort: http }]

@@ -1,0 +1,33 @@
+# LAB 1 - ImagePullBackOff
+# The tag below was never built by CI (CI only publishes full commit SHAs).
+# Symptom: pod stuck in ErrImagePull / ImagePullBackOff.
+# Diagnose: kubectl -n pp-lab describe pod -l app=lab-broken-image  (Events: "not found")
+# Fix: set the image to a tag that exists in GHCR (see troubleshooting/README.md).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab-broken-image
+  namespace: pp-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: lab-broken-image }
+  template:
+    metadata:
+      labels: { app: lab-broken-image }
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: web
+          image: ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:v9.9.9-does-not-exist
+          ports: [{ containerPort: 8080 }]
+          env: [{ name: BACKEND_UPSTREAM, value: "127.0.0.1:8000" }]
+          resources:
+            requests: { cpu: 10m, memory: 16Mi }
+            limits: { cpu: 100m, memory: 64Mi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: { drop: ["ALL"] }

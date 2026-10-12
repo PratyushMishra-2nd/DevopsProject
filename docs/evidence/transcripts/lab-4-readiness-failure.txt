@@ -1,0 +1,23 @@
+# recorded 2026-10-13 01:04:04 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ scripts/troubleshoot.sh apply 4 161f84e908fd81435087c2ad7792182861675c70 && kubectl -n pp-lab rollout status deploy/lab-db --timeout=180s
+namespace/pp-lab unchanged
+deployment.apps/lab-db created
+service/lab-db created
+deployment.apps/lab-api created
+service/lab-api created
+Waiting for deployment "lab-db" rollout to finish: 0 of 1 updated replicas are available...
+deployment "lab-db" successfully rolled out
+
+# recorded 2026-10-13 01:04:50 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ kubectl -n pp-lab get pods -l app=lab-api && kubectl -n pp-lab get endpointslices -l kubernetes.io/service-name=lab-api && kubectl -n pp-lab describe pod -l app=lab-api | grep -E 'Readiness|Unhealthy' | tail -3 && kubectl -n pp-lab exec deploy/lab-api -- python -c "import urllib.request,urllib.error
+try: urllib.request.urlopen('http://127.0.0.1:8000/ready')
+except urllib.error.HTTPError as e: print(e.code, e.read().decode())"
+NAME                       READY   STATUS    RESTARTS   AGE
+lab-api-679644c776-vrwd4   0/1     Running   0          46s
+NAME            ADDRESSTYPE   PORTS   ENDPOINTS     AGE
+lab-api-n6m2x   IPv4          8000    10.244.0.40   46s
+    Readiness:  http-get http://:http/ready delay=0s timeout=1s period=5s #success=1 #failure=3
+  Warning  Unhealthy  44s (x2 over 45s)  kubelet            Readiness probe failed: Get "http://10.244.0.40:8000/ready": dial tcp 10.244.0.40:8000: connect: connection refused
+  Warning  Unhealthy  4s (x8 over 39s)   kubelet            Readiness probe failed: HTTP probe failed with statuscode: 503
+503 {"status":"NOT_READY","reason":"ProgrammingError"}
+

@@ -1,0 +1,19 @@
+# recorded 2026-10-13 01:05:00 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ kubectl -n pp-lab get endpointslices -l kubernetes.io/service-name=lab-api -o jsonpath='{range .items[*].endpoints[*]}{.addresses[0]} ready={.conditions.ready}{"\n"}{end}' && kubectl -n pp-lab delete job lab-migrate && sed -e 's/__SHA__/161f84e908fd81435087c2ad7792182861675c70/' -e 's#pantry:wrong@pantrypulse-postgres-typo:5432/pantrypulse#lab:lab-only-throwaway@lab-db:5432/lab#' troubleshooting/03-database-failure.yaml | kubectl apply -f - && kubectl -n pp-lab wait --for=condition=complete job/lab-migrate --timeout=180s && kubectl -n pp-lab logs job/lab-migrate | tail -3 && kubectl -n pp-lab wait --for=condition=ready pod -l app=lab-api --timeout=120s && kubectl -n pp-lab get pods && kubectl -n pp-lab get endpointslices -l kubernetes.io/service-name=lab-api -o jsonpath='{range .items[*].endpoints[*]}{.addresses[0]} ready={.conditions.ready}{"\n"}{end}'
+10.244.0.40 ready=false
+job.batch "lab-migrate" deleted from pp-lab namespace
+job.batch/lab-migrate created
+job.batch/lab-migrate condition met
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0001_donors_lots, create donors and stock_lots tables
+INFO  [alembic.runtime.migration] Running upgrade 0001_donors_lots -> 0002_dispatches, create dispatches table
+pod/lab-api-679644c776-vrwd4 condition met
+NAME                                READY   STATUS      RESTARTS   AGE
+lab-api-679644c776-vrwd4            1/1     Running     0          67s
+lab-broken-image-5d749f9c5b-45ncq   1/1     Running     0          2m42s
+lab-db-877bdb45d-xpqhq              1/1     Running     0          67s
+lab-migrate-kh82f                   0/1     Completed   0          11s
+lab-web-7fcf6dc785-rmjr4            1/1     Running     0          2m29s
+lab-web-7fcf6dc785-xvv74            1/1     Running     0          2m29s
+10.244.0.40 ready=true
+

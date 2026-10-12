@@ -1,0 +1,36 @@
+# LAB 3 - Database unreachable / migration failure
+# The migration Job points at a database host that does not exist, the same
+# way a wrong DATABASE_URL or a deleted Secret would break a real release.
+# Symptom: Job pods in Error, Job never completes, alembic shows an
+# OperationalError ("failed to resolve host").
+# Diagnose: kubectl -n pp-lab get jobs,pods ; kubectl -n pp-lab logs job/lab-migrate
+# Fix: point DATABASE_URL at the real Service (see troubleshooting/README.md).
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: lab-migrate
+  namespace: pp-lab
+spec:
+  backoffLimit: 2
+  template:
+    metadata:
+      labels: { app: lab-migrate }
+    spec:
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: alembic
+          image: ghcr.io/pratyushmishra-2nd/pantrypulse-backend:__SHA__
+          command: ["alembic", "upgrade", "head"]
+          env:
+            - name: DATABASE_URL
+              value: postgresql+psycopg://pantry:wrong@pantrypulse-postgres-typo:5432/pantrypulse
+          resources:
+            requests: { cpu: 20m, memory: 64Mi }
+            limits: { cpu: 200m, memory: 192Mi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: { drop: ["ALL"] }
