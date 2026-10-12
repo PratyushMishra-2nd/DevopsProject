@@ -1,0 +1,9 @@
+# recorded 2026-10-12 22:55:38 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ scripts/deploy-local.sh 161f84e908fd81435087c2ad7792182861675c70
+namespace/pantrypulse unchanged
+Release "pantrypulse" does not exist. Installing it now.
+Error: resource Deployment/pantrypulse/pantrypulse-backend not ready. status: InProgress, message: Available: 0/2
+resource StatefulSet/pantrypulse/pantrypulse-postgres not ready. status: InProgress, message: Ready: 0/1
+resource Job/pantrypulse/pantrypulse-migrate-1 not ready. status: InProgress, message: Job in progress
+context deadline exceeded
+

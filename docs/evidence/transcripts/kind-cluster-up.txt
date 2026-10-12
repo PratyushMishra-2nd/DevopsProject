@@ -1,0 +1,33 @@
+# recorded 2026-10-12 22:44:56 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ scripts/cluster-up.sh
+Switched to context "kind-pantrypulse".
+Release "traefik" does not exist. Installing it now.
+NAME: traefik
+LAST DEPLOYED: Mon Oct 12 22:44:57 2026
+NAMESPACE: traefik
+STATUS: deployed
+REVISION: 1
+DESCRIPTION: Install complete
+TEST SUITE: None
+NOTES:
+traefik with docker.io/traefik:v3.7.14 has been deployed successfully on traefik namespace!
+Release "metrics-server" does not exist. Installing it now.
+NAME: metrics-server
+LAST DEPLOYED: Mon Oct 12 22:45:25 2026
+NAMESPACE: kube-system
+STATUS: deployed
+REVISION: 1
+DESCRIPTION: Install complete
+TEST SUITE: None
+NOTES:
+***********************************************************************
+* Metrics Server                                                      *
+***********************************************************************
+  Chart version: 3.14.0
+  App version:   0.9.0
+  Image tag:     registry.k8s.io/metrics-server/metrics-server:v0.9.0
+***********************************************************************
+namespace/pantrypulse created
+NAME                        STATUS   ROLES           AGE    VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION                              CONTAINER-RUNTIME
+pantrypulse-control-plane   Ready    control-plane   2m1s   v1.37.0   172.25.0.3    <none>        Debian GNU/Linux 13 (trixie)   6.18.33.1-microsoft-standard-WSL2 (amd64)   containerd://2.3.4
+

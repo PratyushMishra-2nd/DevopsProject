@@ -1,0 +1,8 @@
+# recorded 2026-10-13 00:45:41 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ curl -s -o /dev/null -w 'GET / (frontend via Traefik) -> %{http_code}\n' http://pantrypulse.127.0.0.1.nip.io:8088/ && curl -s -o /dev/null -w 'GET /docs (backend via Traefik) -> %{http_code}\n' http://pantrypulse.127.0.0.1.nip.io:8088/docs && curl -s http://pantrypulse.127.0.0.1.nip.io:8088/api/info && echo && curl -s http://pantrypulse.127.0.0.1.nip.io:8088/api/lots/summary && echo && kubectl -n pantrypulse exec deploy/pantrypulse-backend -- python -c "import urllib.request;print('in-cluster /ready', urllib.request.urlopen('http://127.0.0.1:8000/ready').read().decode())"
+GET / (frontend via Traefik) -> 200
+GET /docs (backend via Traefik) -> 200
+{"service":"PantryPulse API","environment":"pantrypulse","git_sha":"161f84e908fd81435087c2ad7792182861675c70"}
+{"active_lots":14,"expiring_soon":6,"expired_on_shelf":1,"dispatched_this_week":105.0,"partners_served":3,"by_category":{"bakery":1,"beverages":1,"canned":1,"dairy":3,"grains":2,"produce":4,"protein":2},"by_storage":{"ambient":7,"chilled":6,"frozen":1},"warning_days":7}
+in-cluster /ready {"status":"READY"}
+

@@ -1,0 +1,22 @@
+# recorded 2026-10-12 23:11:12 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ kubectl get pods -n pantrypulse; kubectl get events -n pantrypulse --field-selector involvedObject.name=pantrypulse-postgres-0 --sort-by=.lastTimestamp | tail -6; kubectl logs -n pantrypulse job/pantrypulse-migrate-1 --tail=4; kubectl describe pod -n pantrypulse -l app.kubernetes.io/name=backend | grep -E 'Readiness probe failed' | head -2
+NAME                                    READY   STATUS             RESTARTS        AGE
+pantrypulse-backend-864f46c67d-62tmf    0/1     Running            0               15m
+pantrypulse-backend-864f46c67d-tzvnl    0/1     Running            0               15m
+pantrypulse-frontend-786b99fdb7-r6ckr   1/1     Running            0               15m
+pantrypulse-frontend-786b99fdb7-tzxz9   1/1     Running            0               15m
+pantrypulse-migrate-1-jhl24             0/1     Error              6 (3m38s ago)   15m
+pantrypulse-postgres-0                  0/1     ImagePullBackOff   0               15m
+15m         Normal    Scheduled   pod/pantrypulse-postgres-0   Successfully assigned pantrypulse/pantrypulse-postgres-0 to pantrypulse-control-plane
+8m47s       Warning   Failed      pod/pantrypulse-postgres-0   Failed to pull image "postgres:17-alpine3.24": failed to pull and unpack image "docker.io/library/postgres:17-alpine3.24": failed to resolve reference "docker.io/library/postgres:17-alpine3.24": failed to do request: Head "https://registry-1.docker.io/v2/library/postgres/manifests/17-alpine3.24": dial tcp: lookup registry-1.docker.io on 192.168.65.254:53: server misbehaving
+8m47s       Warning   Failed      pod/pantrypulse-postgres-0   Error: ErrImagePull
+8m46s       Normal    BackOff     pod/pantrypulse-postgres-0   Back-off pulling image "postgres:17-alpine3.24"
+8m46s       Warning   Failed      pod/pantrypulse-postgres-0   Error: ImagePullBackOff
+8m24s       Normal    Pulling     pod/pantrypulse-postgres-0   Pulling image "postgres:17-alpine3.24"
+    raise last_ex.with_traceback(None)
+sqlalchemy.exc.OperationalError: (psycopg.OperationalError) connection failed: connection to server at "10.96.123.239", port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+(Background on this error at: https://sqlalche.me/e/21/e3q8)
+  Warning  Unhealthy  6m8s (x2 over 7m16s)  kubelet            Readiness probe failed: Get "http://10.244.0.13:8000/ready": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+  Warning  Unhealthy  34s (x110 over 10m)   kubelet            Readiness probe failed: HTTP probe failed with statuscode: 503
+

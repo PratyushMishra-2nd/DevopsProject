@@ -1,0 +1,56 @@
+# recorded 2026-10-13 00:46:44 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ kubectl get nodes -o wide && kubectl -n pantrypulse get deploy,sts,pods,svc,ingress,hpa,pdb,networkpolicy,pvc,servicemonitor -o wide && kubectl top pods -n pantrypulse && kubectl get pods -n pantrypulse -o jsonpath='{range .items[*]}{.metadata.name}{"  runAsUser="}{.spec.securityContext.runAsUser}{"\n"}{end}'
+NAME                        STATUS   ROLES           AGE    VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION                              CONTAINER-RUNTIME
+pantrypulse-control-plane   Ready    control-plane   122m   v1.37.0   172.25.0.2    <none>        Debian GNU/Linux 13 (trixie)   6.18.33.1-microsoft-standard-WSL2 (amd64)   containerd://2.3.4
+NAME                                   READY   UP-TO-DATE   AVAILABLE   AGE    CONTAINERS   IMAGES                                                                                     SELECTOR
+deployment.apps/pantrypulse-backend    2/2     2            2           111m   api          ghcr.io/pratyushmishra-2nd/pantrypulse-backend:161f84e908fd81435087c2ad7792182861675c70    app.kubernetes.io/instance=pantrypulse,app.kubernetes.io/name=backend
+deployment.apps/pantrypulse-frontend   2/2     2            2           111m   web          ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:161f84e908fd81435087c2ad7792182861675c70   app.kubernetes.io/instance=pantrypulse,app.kubernetes.io/name=frontend
+
+NAME                                    READY   AGE    CONTAINERS   IMAGES
+statefulset.apps/pantrypulse-postgres   1/1     111m   postgres     postgres:17-alpine3.24
+
+NAME                                        READY   STATUS      RESTARTS        AGE    IP            NODE                        NOMINATED NODE   READINESS GATES
+pod/pantrypulse-backend-864f46c67d-62tmf    1/1     Running     1 (3m18s ago)   111m   10.244.0.3    pantrypulse-control-plane   <none>           <none>
+pod/pantrypulse-backend-864f46c67d-tzvnl    1/1     Running     1 (3m18s ago)   111m   10.244.0.6    pantrypulse-control-plane   <none>           <none>
+pod/pantrypulse-frontend-786b99fdb7-r6ckr   1/1     Running     4 (2m49s ago)   111m   10.244.0.7    pantrypulse-control-plane   <none>           <none>
+pod/pantrypulse-frontend-786b99fdb7-tzxz9   1/1     Running     4 (2m49s ago)   111m   10.244.0.4    pantrypulse-control-plane   <none>           <none>
+pod/pantrypulse-migrate-2-q6mtg             0/1     Completed   0               92s    10.244.0.17   pantrypulse-control-plane   <none>           <none>
+pod/pantrypulse-postgres-0                  1/1     Running     1 (3m18s ago)   111m   10.244.0.15   pantrypulse-control-plane   <none>           <none>
+
+NAME                           TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE    SELECTOR
+service/pantrypulse-backend    ClusterIP   10.96.118.92    <none>        8000/TCP   111m   app.kubernetes.io/instance=pantrypulse,app.kubernetes.io/name=backend
+service/pantrypulse-frontend   ClusterIP   10.96.9.196     <none>        80/TCP     111m   app.kubernetes.io/instance=pantrypulse,app.kubernetes.io/name=frontend
+service/pantrypulse-postgres   ClusterIP   10.96.123.239   <none>        5432/TCP   111m   app.kubernetes.io/instance=pantrypulse,app.kubernetes.io/name=postgres
+
+NAME                                    CLASS     HOSTS                          ADDRESS   PORTS   AGE
+ingress.networking.k8s.io/pantrypulse   traefik   pantrypulse.127.0.0.1.nip.io             80      111m
+
+NAME                                                       REFERENCE                         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/pantrypulse-backend    Deployment/pantrypulse-backend    cpu: 15%/70%   2         5         2          111m
+horizontalpodautoscaler.autoscaling/pantrypulse-frontend   Deployment/pantrypulse-frontend   cpu: 4%/75%    2         4         2          111m
+
+NAME                                              MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
+poddisruptionbudget.policy/pantrypulse-backend    1               N/A               1                     111m
+poddisruptionbudget.policy/pantrypulse-frontend   1               N/A               1                     111m
+
+NAME                                                   POD-SELECTOR                                                             AGE
+networkpolicy.networking.k8s.io/pantrypulse-postgres   app.kubernetes.io/instance=pantrypulse,app.kubernetes.io/name=postgres   111m
+
+NAME                                                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE    VOLUMEMODE
+persistentvolumeclaim/data-pantrypulse-postgres-0   Bound    pvc-223d727f-6335-412f-9f6b-e3fbb4af6dfd   1Gi        RWO            standard       <unset>                 111m   Filesystem
+
+NAME                                                       AGE
+servicemonitor.monitoring.coreos.com/pantrypulse-backend   111m
+NAME                                    CPU(cores)   MEMORY(bytes)   
+pantrypulse-backend-864f46c67d-62tmf    22m          90Mi            
+pantrypulse-backend-864f46c67d-tzvnl    3m           78Mi            
+pantrypulse-frontend-786b99fdb7-r6ckr   1m           18Mi            
+pantrypulse-frontend-786b99fdb7-tzxz9   1m           18Mi            
+pantrypulse-postgres-0                  11m          46Mi            
+pantrypulse-backend-864f46c67d-62tmf  runAsUser=10001
+pantrypulse-backend-864f46c67d-tzvnl  runAsUser=10001
+pantrypulse-frontend-786b99fdb7-r6ckr  runAsUser=101
+pantrypulse-frontend-786b99fdb7-tzxz9  runAsUser=101
+pantrypulse-migrate-2-q6mtg  runAsUser=10001
+pantrypulse-postgres-0  runAsUser=70
+

@@ -1,0 +1,4 @@
+# recorded 2026-10-13 00:45:39 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ kubectl -n pantrypulse exec deploy/pantrypulse-backend -- python -m app.seed
+INFO:pantrypulse.seed:seed complete
+

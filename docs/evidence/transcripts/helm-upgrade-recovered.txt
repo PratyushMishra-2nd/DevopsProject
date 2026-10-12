@@ -1,0 +1,43 @@
+# recorded 2026-10-13 00:45:11 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ scripts/deploy-local.sh 161f84e908fd81435087c2ad7792182861675c70 && helm list -n pantrypulse && helm history pantrypulse -n pantrypulse
+namespace/pantrypulse unchanged
+Release "pantrypulse" has been upgraded. Happy Helming!
+NAME: pantrypulse
+LAST DEPLOYED: Tue Oct 13 00:45:12 2026
+NAMESPACE: pantrypulse
+STATUS: deployed
+REVISION: 2
+DESCRIPTION: Upgrade complete
+TEST SUITE: None
+NOTES:
+PantryPulse 161f84e is deployed to namespace pantrypulse.
+
+  kubectl get pods,svc,ingress,hpa -n pantrypulse
+
+Open http://pantrypulse.127.0.0.1.nip.io/  (API: /api, Swagger: /docs)
+NAME                                        READY   STATUS      RESTARTS       AGE
+pod/pantrypulse-backend-864f46c67d-62tmf    1/1     Running     1 (112s ago)   109m
+pod/pantrypulse-backend-864f46c67d-tzvnl    1/1     Running     1 (112s ago)   109m
+pod/pantrypulse-frontend-786b99fdb7-r6ckr   1/1     Running     4 (83s ago)    109m
+pod/pantrypulse-frontend-786b99fdb7-tzxz9   1/1     Running     4 (83s ago)    109m
+pod/pantrypulse-migrate-2-q6mtg             0/1     Completed   0              6s
+pod/pantrypulse-postgres-0                  1/1     Running     1 (112s ago)   109m
+
+NAME                           TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+service/pantrypulse-backend    ClusterIP   10.96.118.92    <none>        8000/TCP   109m
+service/pantrypulse-frontend   ClusterIP   10.96.9.196     <none>        80/TCP     109m
+service/pantrypulse-postgres   ClusterIP   10.96.123.239   <none>        5432/TCP   109m
+
+NAME                                    CLASS     HOSTS                          ADDRESS   PORTS   AGE
+ingress.networking.k8s.io/pantrypulse   traefik   pantrypulse.127.0.0.1.nip.io             80      109m
+
+NAME                                                       REFERENCE                         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+horizontalpodautoscaler.autoscaling/pantrypulse-backend    Deployment/pantrypulse-backend    cpu: 3%/70%    2         5         2          109m
+horizontalpodautoscaler.autoscaling/pantrypulse-frontend   Deployment/pantrypulse-frontend   cpu: 30%/75%   2         4         2          109m
+Open http://pantrypulse.127.0.0.1.nip.io:8088
+NAME       	NAMESPACE  	REVISION	UPDATED                              	STATUS  	CHART            	APP VERSION
+pantrypulse	pantrypulse	2       	2026-10-13 00:45:12.0353249 +0530 IST	deployed	pantrypulse-0.1.0	1.0.0      
+REVISION	UPDATED                 	STATUS    	CHART            	APP VERSION	DESCRIPTION                                                                                                                             
+1       	Mon Oct 12 22:55:39 2026	superseded	pantrypulse-0.1.0	1.0.0      	Release "pantrypulse" failed: resource Deployment/pantrypulse/pantrypulse-backend not ready. status: InProgress, message: Available: ...
+2       	Tue Oct 13 00:45:12 2026	deployed  	pantrypulse-0.1.0	1.0.0      	Upgrade complete                                                                                                                        
+
