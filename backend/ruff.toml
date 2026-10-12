@@ -1,0 +1,11 @@
+line-length = 120
+target-version = "py312"
+
+[lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "SIM"]
+# S101: assert is how pytest works. B008: FastAPI's Depends() in defaults is idiomatic.
+ignore = ["B008"]
+
+[lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106"]
+"alembic/**" = ["E501"]
