@@ -71,7 +71,7 @@ postgres:
 ingress:
   enabled: true
   className: traefik
-  host: pantrypulse.local
+  host: pantrypulse.127.0.0.1.nip.io
   annotations: {}
   tls: []
 

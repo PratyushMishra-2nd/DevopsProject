@@ -354,16 +354,16 @@ jobs:
           kubectl get pods,svc,ingress,hpa -n pantrypulse -o wide
       - name: Smoke test through the Ingress
         run: |
-          H="Host: pantrypulse.local"
+          H="Host: pantrypulse.127.0.0.1.nip.io"; URL=http://127.0.0.1:8088
           for i in $(seq 1 30); do
-            sha=$(curl -sf -H "$H" http://127.0.0.1/api/info | jq -r .git_sha) && [ "$sha" = "$GITHUB_SHA" ] && break
+            sha=$(curl -sf -H "$H" $URL/api/info | jq -r .git_sha) && [ "$sha" = "$GITHUB_SHA" ] && break
             sleep 4
           done
           echo "deployed git_sha=$sha"; test "$sha" = "$GITHUB_SHA"
-          curl -sf -H "$H" http://127.0.0.1/ | grep -q "<title>PantryPulse</title>"
+          curl -sf -H "$H" $URL/ | grep -q "<title>PantryPulse</title>"
           code=$(curl -s -o /dev/null -w '%{http_code}' -H "$H" -H 'Content-Type: application/json' \
             -d "{\"item_name\":\"CI smoke rice\",\"category\":\"grains\",\"quantity\":5,\"unit\":\"kg\",\"storage\":\"ambient\",\"received_on\":\"$(date +%F)\",\"expires_on\":\"$(date -d '+30 days' +%F)\"}" \
-            http://127.0.0.1/api/lots)
+            "$URL/api/lots")
           echo "POST /api/lots -> $code"; test "$code" = "201"
           echo "Deployed \`${GITHUB_SHA::7}\` to kind; Ingress serves / and /api, POST /api/lots returned 201." >> "$GITHUB_STEP_SUMMARY"
       - name: Diagnostics on failure

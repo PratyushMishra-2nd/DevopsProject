@@ -4,4 +4,5 @@ PantryPulse {{ .Values.backend.image.tag | trunc 7 }} is deployed to namespace {
 {{- if .Values.ingress.enabled }}
 
 Open http://{{ .Values.ingress.host }}/  (API: /api, Swagger: /docs)
+On the local kind cluster the Ingress is on host port 8088: http://{{ .Values.ingress.host }}:8088/
 {{- end }}
