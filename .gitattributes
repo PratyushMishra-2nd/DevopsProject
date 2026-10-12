@@ -1,0 +1,10 @@
+# Keep LF line endings so shell scripts, YAML and Dockerfiles behave in Linux containers
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.gif binary
+*.mp4 binary
+*.pptx binary
+*.pdf binary
+*.ico binary
+*.woff2 binary
