@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 # ---- build stage: Node compiles the React app into static files ----
-FROM node:24-alpine3.24 AS build
+FROM node:26-alpine3.24 AS build
 WORKDIR /src
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
