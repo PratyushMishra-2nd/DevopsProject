@@ -1,0 +1,7 @@
+# recorded 2026-10-12 22:22:25 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ docker compose ps --format 'table {{.Name}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}'
+NAME                     IMAGE                        STATUS                    PORTS
+pantrypulse-backend-1    pantrypulse-backend:local    Up 26 seconds (healthy)   0.0.0.0:8800->8000/tcp, [::]:8800->8000/tcp
+pantrypulse-frontend-1   pantrypulse-frontend:local   Up 21 seconds (healthy)   0.0.0.0:3300->8080/tcp, [::]:3300->8080/tcp
+pantrypulse-postgres-1   postgres:17-alpine3.24       Up 32 seconds (healthy)   5432/tcp
+

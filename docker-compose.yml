@@ -1,0 +1,71 @@
+# PantryPulse local stack: React/Nginx + FastAPI + PostgreSQL.
+#   docker compose up --build        -> http://localhost:3000
+# Host ports can be moved with FRONTEND_PORT / BACKEND_PORT if 3000/8000 are taken.
+name: pantrypulse
+
+services:
+  postgres:
+    image: postgres:17-alpine3.24
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-pantrypulse}
+      POSTGRES_USER: ${POSTGRES_USER:-pantry}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pantry-local-only}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks: [data]
+    # No host port: only the backend talks to the database.
+
+  backend:
+    build:
+      context: ./backend
+      args:
+        GIT_SHA: ${GIT_SHA:-local}
+    image: pantrypulse-backend:local
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-pantry}:${POSTGRES_PASSWORD:-pantry-local-only}@postgres:5432/${POSTGRES_DB:-pantrypulse}
+      APP_ENV: compose
+      LOG_LEVEL: INFO
+      RUN_MIGRATIONS: "true"
+      SEED_DEMO: ${SEED_DEMO:-true}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready', timeout=2)"]
+      interval: 10s
+      timeout: 3s
+      start_period: 20s
+      retries: 6
+    networks: [data, web]
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        GIT_SHA: ${GIT_SHA:-local}
+    image: pantrypulse-frontend:local
+    restart: unless-stopped
+    environment:
+      BACKEND_UPSTREAM: backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "${FRONTEND_PORT:-3000}:8080"
+    networks: [web]
+
+volumes:
+  pgdata:
+
+networks:
+  web:
+  data:

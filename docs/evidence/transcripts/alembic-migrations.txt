@@ -1,0 +1,35 @@
+# recorded 2026-10-12 22:22:26 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ docker compose exec -T backend alembic current && docker compose exec -T backend alembic history --verbose | head -20 && docker compose exec -T postgres psql -U pantry -d pantrypulse -c '\dt'
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+0002_dispatches (head)
+Rev: 0002_dispatches (head)
+Parent: 0001_donors_lots
+Path: /app/alembic/versions/0002_create_dispatches.py
+
+    create dispatches table
+    
+    Revision ID: 0002_dispatches
+    Revises: 0001_donors_lots
+    Create Date: 2026-10-12
+
+Rev: 0001_donors_lots
+Parent: <base>
+Path: /app/alembic/versions/0001_create_donors_and_stock_lots.py
+
+    create donors and stock_lots tables
+    
+    Revision ID: 0001_donors_lots
+    Revises:
+    Create Date: 2026-10-12
+
+             List of relations
+ Schema |      Name       | Type  | Owner  
+--------+-----------------+-------+--------
+ public | alembic_version | table | pantry
+ public | dispatches      | table | pantry
+ public | donors          | table | pantry
+ public | stock_lots      | table | pantry
+(4 rows)
+
+

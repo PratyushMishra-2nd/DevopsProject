@@ -1,0 +1,22 @@
+# recorded 2026-10-12 22:22:35 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ curl -s -X POST http://localhost:3300/api/lots -H 'Content-Type: application/json' -d '{"item_name":"Pratyush demo: sweet potatoes","category":"produce","quantity":30,"unit":"kg","storage":"ambient","received_on":"2026-10-12","expires_on":"2026-10-22","donor_id":2}' -w '\n-> HTTP %{http_code}\n'
+curl -s http://localhost:3300/api/lots/15 -w '\n-> HTTP %{http_code}\n'
+curl -s -X PUT http://localhost:3300/api/lots/15 -H 'Content-Type: application/json' -d '{"quantity":24,"notes":"Re-weighed after sorting"}' -w '\n-> HTTP %{http_code}\n'
+curl -s -X POST http://localhost:3300/api/dispatches -H 'Content-Type: application/json' -d '{"lot_id":15,"partner":"Asha Night Shelter","quantity":99}' -w '\n-> HTTP %{http_code}\n'
+curl -s -X POST http://localhost:3300/api/lots -H 'Content-Type: application/json' -d '{"item_name":"x","category":"sweets","quantity":-1}' -w '\n-> HTTP %{http_code}\n'
+curl -s -X DELETE http://localhost:3300/api/lots/15 -w '-> HTTP %{http_code}\n'
+curl -s http://localhost:3300/api/lots/15 -w '\n-> HTTP %{http_code}\n'
+{"item_name":"Pratyush demo: sweet potatoes","category":"produce","quantity":30.0,"unit":"kg","storage":"ambient","received_on":"2026-10-12","expires_on":"2026-10-22","notes":null,"donor_id":2,"id":15,"status":"available","donor_name":"Kalinga Organic Farms","days_left":10,"freshness":"fresh","created_at":"2026-10-12T16:52:35.880939Z","updated_at":"2026-10-12T16:52:35.880943Z"}
+-> HTTP 201
+{"item_name":"Pratyush demo: sweet potatoes","category":"produce","quantity":30.0,"unit":"kg","storage":"ambient","received_on":"2026-10-12","expires_on":"2026-10-22","notes":null,"donor_id":2,"id":15,"status":"available","donor_name":"Kalinga Organic Farms","days_left":10,"freshness":"fresh","created_at":"2026-10-12T16:52:35.880939Z","updated_at":"2026-10-12T16:52:35.880943Z"}
+-> HTTP 200
+{"item_name":"Pratyush demo: sweet potatoes","category":"produce","quantity":24.0,"unit":"kg","storage":"ambient","received_on":"2026-10-12","expires_on":"2026-10-22","notes":"Re-weighed after sorting","donor_id":2,"id":15,"status":"available","donor_name":"Kalinga Organic Farms","days_left":10,"freshness":"fresh","created_at":"2026-10-12T16:52:35.880939Z","updated_at":"2026-10-12T16:52:35.960935Z"}
+-> HTTP 200
+{"detail":"Only 24 kg left in this lot"}
+-> HTTP 422
+{"detail":[{"type":"string_too_short","loc":["body","item_name"],"msg":"String should have at least 2 characters","input":"x","ctx":{"min_length":2}},{"type":"enum","loc":["body","category"],"msg":"Input should be 'produce', 'dairy', 'bakery', 'grains', 'canned', 'protein' or 'beverages'","input":"sweets","ctx":{"expected":"'produce', 'dairy', 'bakery', 'grains', 'canned', 'protein' or 'beverages'"}},{"type":"greater_than","loc":["body","quantity"],"msg":"Input should be greater than 0","input":-1,"ctx":{"gt":0.0}},{"type":"missing","loc":["body","unit"],"msg":"Field required","input":{"item_name":"x","category":"sweets","quantity":-1}},{"type":"missing","loc":["body","storage"],"msg":"Field required","input":{"item_name":"x","category":"sweets","quantity":-1}},{"type":"missing","loc":["body","received_on"],"msg":"Field required","input":{"item_name":"x","category":"sweets","quantity":-1}},{"type":"missing","loc":["body","expires_on"],"msg":"Field required","input":{"item_name":"x","category":"sweets","quantity":-1}}]}
+-> HTTP 422
+-> HTTP 204
+{"detail":"Stock lot 15 not found"}
+-> HTTP 404
+

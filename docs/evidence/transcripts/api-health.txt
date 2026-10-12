@@ -1,0 +1,6 @@
+# recorded 2026-10-12 22:22:26 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ curl -s http://localhost:8800/health; echo; curl -s http://localhost:8800/ready; echo; curl -s http://localhost:3300/api/info; echo
+{"status":"UP"}
+{"status":"READY"}
+{"service":"PantryPulse API","environment":"compose","git_sha":"c82d630"}
+

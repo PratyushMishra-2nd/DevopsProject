@@ -1,0 +1,27 @@
+# recorded 2026-10-12 22:22:41 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ curl -s -X POST http://localhost:3300/api/donors -H 'Content-Type: application/json' -d '{"name":"Persistence Check Bakery","kind":"restaurant","city":"Bhubaneswar"}' -o /dev/null -w 'created donor -> HTTP %{http_code}\n'
+docker compose down
+docker compose up --detach --wait 2>&1 | grep -E 'Healthy|Started' | tail -3
+curl -s http://localhost:3300/api/donors | python -c 'import sys,json; print([d["name"] for d in json.load(sys.stdin) if "Persistence" in d["name"]])'
+created donor -> HTTP 201
+ Container pantrypulse-frontend-1 Stopping 
+ Container pantrypulse-frontend-1 Stopped 
+ Container pantrypulse-frontend-1 Removing 
+ Container pantrypulse-frontend-1 Removed 
+ Container pantrypulse-backend-1 Stopping 
+ Container pantrypulse-backend-1 Stopped 
+ Container pantrypulse-backend-1 Removing 
+ Container pantrypulse-backend-1 Removed 
+ Container pantrypulse-postgres-1 Stopping 
+ Container pantrypulse-postgres-1 Stopped 
+ Container pantrypulse-postgres-1 Removing 
+ Container pantrypulse-postgres-1 Removed 
+ Network pantrypulse_web Removing 
+ Network pantrypulse_data Removing 
+ Network pantrypulse_web Removed 
+ Network pantrypulse_data Removed 
+ Container pantrypulse-postgres-1 Healthy 
+ Container pantrypulse-backend-1 Healthy 
+ Container pantrypulse-frontend-1 Healthy 
+['Persistence Check Bakery']
+

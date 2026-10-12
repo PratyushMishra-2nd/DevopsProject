@@ -800,15 +800,20 @@ textarea {
   white-space: nowrap;
 }
 
-.radar__row--critical .radar__bar,
-.radar__row--expired .radar__bar {
+.radar__row--critical .radar__bar {
   color: #fff;
 }
 
+/* Expired bars are too short for their label: print it just after the bar. */
 .radar__row--expired .radar__bar {
-  justify-content: flex-start;
-  padding-left: 8px;
-  overflow: visible;
+  position: relative;
+  padding: 0;
+}
+
+.radar__row--expired .radar__bar span {
+  position: absolute;
+  left: calc(100% + 8px);
+  color: var(--tomato);
 }
 
 /* ---------- donors ---------- */
@@ -825,7 +830,7 @@ textarea {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   gap: 14px;
 }
 
@@ -867,6 +872,10 @@ textarea {
   background: var(--plum);
 }
 
+.donor__body {
+  min-width: 0;
+}
+
 .donor__body h3 {
   font-size: 16px;
 }
@@ -878,6 +887,10 @@ textarea {
 }
 
 .donor__body a {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 13px;
   color: var(--forest-2);
 }

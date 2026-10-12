@@ -1,0 +1,9 @@
+# recorded 2026-10-12 22:22:25 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ for c in pantrypulse-backend-1 pantrypulse-frontend-1; do echo "== $c"; docker exec $c id; docker inspect $c --format 'Config.User={{.Config.User}}'; done
+== pantrypulse-backend-1
+uid=10001(app) gid=10001(app) groups=10001(app)
+Config.User=10001:10001
+== pantrypulse-frontend-1
+uid=101(nginx) gid=101(nginx) groups=101(nginx)
+Config.User=101
+
