@@ -3,11 +3,11 @@
 # are not in GHCR, so only images that passed CI and the Trivy gate are deployed.
 backend:
   image:
-    tag: "161f84e908fd81435087c2ad7792182861675c70"
+    tag: "8be415d7e29164a997390aad36d32623c3548548"
 
 frontend:
   image:
-    tag: "161f84e908fd81435087c2ad7792182861675c70"
+    tag: "8be415d7e29164a997390aad36d32623c3548548"
 
 # Password lives in a Secret created outside Git (scripts/install-argocd.sh).
 database:
