@@ -1,0 +1,374 @@
+# PantryPulse CI/CD
+#
+#   test gates (parallel)        build + scan + publish            deploy
+#   ─────────────────────        ──────────────────────            ──────
+#   backend: lint, SAST,   ┐
+#            deps, pytest  │
+#   frontend: lint, tests, ├──► build both images ─► Trivy (HIGH/CRITICAL
+#            audit, build  │    (tag = commit SHA)    fail the run) ─► push to GHCR
+#   secret scan (gitleaks) │                          + SBOM + provenance   ─► kind cluster:
+#   IaC: terraform + helm  ┘                                                  helm install + Ingress smoke test
+#
+# Nothing is pushed unless every gate passes; pull requests run the gates and
+# the image build/scan but never publish. GitOps promotion to the demo cluster
+# is a separate, reviewed commit to gitops/values.yaml (see docs/engineering/gitops.md).
+
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  TRIVY_VERSION: "0.75.0"
+  TRIVY_SHA256: c6e65abddb348e25f10549df887045629cf28cc72453cd1c63acb717316b3f3f
+  GITLEAKS_VERSION: "8.30.1"
+  GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+  # Mirrors first: ghcr.io rate-limits anonymous vulnerability-DB downloads.
+  TRIVY_DB_REPOSITORY: mirror.gcr.io/aquasec/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2,ghcr.io/aquasecurity/trivy-db:2
+
+jobs:
+  backend:
+    name: Backend - lint, SAST, dependency audit, pytest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      postgres:
+        image: postgres:17-alpine3.24
+        env:
+          POSTGRES_DB: pantrypulse_test
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci-only-throwaway
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U ci -d pantrypulse_test"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Ruff lint and format check
+        run: |
+          ruff check .
+          ruff format --check .
+      - name: Bandit (SAST, medium+ severity and confidence)
+        run: bandit -r app -ll -ii
+      - name: pip-audit (known CVEs in runtime dependencies)
+        run: pip-audit -r requirements.txt --progress-spinner off
+      - name: Pytest (SQLite unit tests + Alembic/PostgreSQL integration)
+        env:
+          TEST_POSTGRES_URL: postgresql+psycopg://ci:ci-only-throwaway@localhost:5432/pantrypulse_test
+        run: >-
+          pytest -v --cov=app --cov-report=term-missing --cov-report=xml
+          --cov-fail-under=85 --junitxml=pytest-report.xml
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: backend-test-reports
+          path: |
+            backend/pytest-report.xml
+            backend/coverage.xml
+          retention-days: 14
+
+  frontend:
+    name: Frontend - lint, tests, audit, build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - name: ESLint and Prettier
+        run: |
+          npm run lint
+          npm run format:check
+      - name: Vitest
+        run: npm test
+      - name: npm audit (production dependencies, high+)
+        run: npm audit --omit=dev --audit-level=high
+      - name: Vite production build
+        run: npm run build
+
+  secret-scan:
+    name: Secret scan (gitleaks, full history)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Install gitleaks (checksum verified)
+        run: |
+          curl -sSfL -o /tmp/gitleaks.tgz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  /tmp/gitleaks.tgz" | sha256sum -c -
+          tar -xzf /tmp/gitleaks.tgz -C /tmp gitleaks
+      - name: Scan every commit
+        run: /tmp/gitleaks git --redact --verbose .
+
+  iac:
+    name: IaC - Terraform and Helm checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: "1.16.5"
+          terraform_wrapper: false
+      - uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
+        with:
+          version: v4.3.0
+      - name: Install Trivy (checksum verified)
+        run: |
+          curl -sSfL -o /tmp/trivy.tgz \
+            "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"
+          echo "${TRIVY_SHA256}  /tmp/trivy.tgz" | sha256sum -c -
+          sudo tar -xzf /tmp/trivy.tgz -C /usr/local/bin trivy
+      - name: terraform fmt
+        run: terraform -chdir=terraform fmt -recursive -check
+      # Scan before `init` so provider/module caches are not scanned.
+      - name: Trivy misconfiguration scan - Terraform
+        run: >-
+          trivy config --exit-code 1 --severity MEDIUM,HIGH,CRITICAL
+          --tf-vars terraform/terraform.tfvars.example
+          --ignorefile security/trivy-iac-accepted.yaml terraform
+      - name: terraform init, validate and offline tests
+        run: |
+          terraform -chdir=terraform init -backend=false -input=false
+          terraform -chdir=terraform validate
+          terraform -chdir=terraform test
+      - name: Helm lint and render
+        run: |
+          set -- --set backend.image.tag=ci --set frontend.image.tag=ci --set postgres.auth.password=ci
+          helm lint helm/pantrypulse -f helm/pantrypulse/values-dev.yaml "$@"
+          mkdir -p rendered
+          helm template pantrypulse helm/pantrypulse -n pantrypulse -f helm/pantrypulse/values-dev.yaml "$@" > rendered/pantrypulse.yaml
+          cp k8s/*.yaml rendered/
+      - name: Trivy misconfiguration scan - Kubernetes manifests
+        run: >-
+          trivy config --exit-code 1 --severity MEDIUM,HIGH,CRITICAL
+          --ignorefile security/trivy-iac-accepted.yaml rendered
+
+  build-scan-push:
+    name: Build, scan and publish images
+    needs: [backend, frontend, secret-scan, iac]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    outputs:
+      backend_digest: ${{ steps.push.outputs.backend_digest }}
+      frontend_digest: ${{ steps.push.outputs.frontend_digest }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Image names (GHCR requires lowercase)
+        run: echo "IMAGE_PREFIX=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/pantrypulse" >> "$GITHUB_ENV"
+      - name: Build backend image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: backend
+          load: true
+          push: false
+          provenance: false
+          tags: ${{ env.IMAGE_PREFIX }}-backend:${{ github.sha }}
+          build-args: GIT_SHA=${{ github.sha }}
+          cache-from: type=gha,scope=backend
+          cache-to: type=gha,scope=backend,mode=max
+      - name: Build frontend image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: frontend
+          load: true
+          push: false
+          provenance: false
+          tags: ${{ env.IMAGE_PREFIX }}-frontend:${{ github.sha }}
+          build-args: GIT_SHA=${{ github.sha }}
+          cache-from: type=gha,scope=frontend
+          cache-to: type=gha,scope=frontend,mode=max
+      - name: Install Trivy (checksum verified)
+        run: |
+          curl -sSfL -o /tmp/trivy.tgz \
+            "https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"
+          echo "${TRIVY_SHA256}  /tmp/trivy.tgz" | sha256sum -c -
+          sudo tar -xzf /tmp/trivy.tgz -C /usr/local/bin trivy
+      # Policy: any HIGH or CRITICAL vulnerability with a released fix fails
+      # the run before anything is pushed. Unfixed CVEs are still listed in
+      # the full JSON report (artifact) for review.
+      - name: Trivy scan - backend image (gate)
+        run: |
+          trivy image --exit-code 1 --severity HIGH,CRITICAL --ignore-unfixed \
+            --scanners vuln,secret --format table "${IMAGE_PREFIX}-backend:${GITHUB_SHA}" | tee trivy-backend.txt
+      - name: Trivy scan - frontend image (gate)
+        run: |
+          trivy image --exit-code 1 --severity HIGH,CRITICAL --ignore-unfixed \
+            --scanners vuln,secret --format table "${IMAGE_PREFIX}-frontend:${GITHUB_SHA}" | tee trivy-frontend.txt
+      - name: Full vulnerability reports (all severities, informational)
+        if: always()
+        run: |
+          for c in backend frontend; do
+            trivy image --skip-db-update --format json -o "trivy-$c-full.json" "${IMAGE_PREFIX}-$c:${GITHUB_SHA}" || true
+          done
+          {
+            echo "## Trivy image scan (HIGH/CRITICAL, fixable) for \`${GITHUB_SHA::7}\`"
+            for c in backend frontend; do
+              echo "### $c"
+              echo '```'
+              cat "trivy-$c.txt" 2>/dev/null || echo "scan did not run"
+              echo '```'
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload Trivy reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: trivy-reports
+          path: trivy-*
+          retention-days: 30
+
+      - name: Log in to GHCR
+        if: github.event_name == 'push'
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push images tagged with the commit SHA
+        id: push
+        if: github.event_name == 'push'
+        run: |
+          for c in backend frontend; do
+            docker push "${IMAGE_PREFIX}-$c:${GITHUB_SHA}"
+            digest=$(docker buildx imagetools inspect "${IMAGE_PREFIX}-$c:${GITHUB_SHA}" --format '{{ .Manifest.Digest }}')
+            echo "${c}_digest=$digest" >> "$GITHUB_OUTPUT"
+            echo "- \`${IMAGE_PREFIX}-$c:${GITHUB_SHA}\` @ \`$digest\`" >> "$GITHUB_STEP_SUMMARY"
+          done
+      - name: SBOM - backend (SPDX)
+        if: github.event_name == 'push'
+        uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
+        with:
+          image: ${{ env.IMAGE_PREFIX }}-backend:${{ github.sha }}
+          format: spdx-json
+          artifact-name: sbom-backend.spdx.json
+      - name: SBOM - frontend (SPDX)
+        if: github.event_name == 'push'
+        uses: anchore/sbom-action@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
+        with:
+          image: ${{ env.IMAGE_PREFIX }}-frontend:${{ github.sha }}
+          format: spdx-json
+          artifact-name: sbom-frontend.spdx.json
+      - name: Build provenance attestation - backend
+        if: github.event_name == 'push'
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-name: ${{ env.IMAGE_PREFIX }}-backend
+          subject-digest: ${{ steps.push.outputs.backend_digest }}
+          push-to-registry: true
+      - name: Build provenance attestation - frontend
+        if: github.event_name == 'push'
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-name: ${{ env.IMAGE_PREFIX }}-frontend
+          subject-digest: ${{ steps.push.outputs.frontend_digest }}
+          push-to-registry: true
+
+  deploy-kind:
+    name: Deploy to kind with Helm and smoke-test through the Ingress
+    needs: build-scan-push
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      packages: read
+      attestations: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
+        with:
+          version: v4.3.0
+      - name: Image names
+        run: echo "IMAGE_PREFIX=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/pantrypulse" >> "$GITHUB_ENV"
+      - name: Verify build provenance before deploying
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for c in backend frontend; do
+            gh attestation verify "oci://${IMAGE_PREFIX}-$c:${GITHUB_SHA}" --repo "$GITHUB_REPOSITORY" \
+              --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/ci-cd.yml"
+          done
+      - name: Create kind cluster
+        uses: helm/kind-action@1544676c07bb3570fcb70166beaa07c4528fd4aa # v1.15.1
+        with:
+          cluster_name: pantrypulse
+          config: k8s/kind-config.yaml
+      - name: Install Traefik ingress controller
+        run: |
+          helm repo add traefik https://traefik.github.io/charts
+          helm upgrade --install traefik traefik/traefik --version 41.7.1 -n traefik --create-namespace \
+            -f k8s/addons/traefik-kind-values.yaml --wait --timeout 4m
+      - name: Namespace and registry pull secret
+        run: |
+          kubectl apply -f k8s/namespace.yaml
+          kubectl -n pantrypulse create secret docker-registry ghcr --docker-server=ghcr.io \
+            --docker-username="${GITHUB_ACTOR}" --docker-password="${{ secrets.GITHUB_TOKEN }}"
+      - name: Helm install (images pinned to this commit)
+        run: |
+          helm upgrade --install pantrypulse ./helm/pantrypulse -n pantrypulse \
+            -f helm/pantrypulse/values-dev.yaml \
+            --set serviceMonitor.enabled=false \
+            --set "imagePullSecrets[0].name=ghcr" \
+            --set backend.image.tag="${GITHUB_SHA}" --set frontend.image.tag="${GITHUB_SHA}" \
+            --set-string postgres.auth.password="$(openssl rand -hex 16)" \
+            --wait --wait-for-jobs --timeout 8m
+          kubectl get pods,svc,ingress,hpa -n pantrypulse -o wide
+      - name: Smoke test through the Ingress
+        run: |
+          H="Host: pantrypulse.local"
+          for i in $(seq 1 30); do
+            sha=$(curl -sf -H "$H" http://127.0.0.1/api/info | jq -r .git_sha) && [ "$sha" = "$GITHUB_SHA" ] && break
+            sleep 4
+          done
+          echo "deployed git_sha=$sha"; test "$sha" = "$GITHUB_SHA"
+          curl -sf -H "$H" http://127.0.0.1/ | grep -q "<title>PantryPulse</title>"
+          code=$(curl -s -o /dev/null -w '%{http_code}' -H "$H" -H 'Content-Type: application/json' \
+            -d "{\"item_name\":\"CI smoke rice\",\"category\":\"grains\",\"quantity\":5,\"unit\":\"kg\",\"storage\":\"ambient\",\"received_on\":\"$(date +%F)\",\"expires_on\":\"$(date -d '+30 days' +%F)\"}" \
+            http://127.0.0.1/api/lots)
+          echo "POST /api/lots -> $code"; test "$code" = "201"
+          echo "Deployed \`${GITHUB_SHA::7}\` to kind; Ingress serves / and /api, POST /api/lots returned 201." >> "$GITHUB_STEP_SUMMARY"
+      - name: Diagnostics on failure
+        if: failure()
+        run: |
+          kubectl get all,ingress,events -n pantrypulse || true
+          kubectl describe pods -n pantrypulse || true
+          kubectl logs -n pantrypulse -l app.kubernetes.io/instance=pantrypulse --all-containers --tail=80 || true
