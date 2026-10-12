@@ -1,0 +1,19 @@
+# Desired state of the local (kind) environment, reconciled by Argo CD.
+# Change the tags only with scripts/promote.sh <sha>: it refuses builds that
+# are not in GHCR, so only images that passed CI and the Trivy gate are deployed.
+backend:
+  image:
+    tag: "161f84e908fd81435087c2ad7792182861675c70"
+
+frontend:
+  image:
+    tag: "161f84e908fd81435087c2ad7792182861675c70"
+
+# Password lives in a Secret created outside Git (scripts/install-argocd.sh).
+database:
+  existingSecret: pantrypulse-db
+
+# Run Alembic as an Argo CD Sync hook (re-created on every sync) instead of a
+# Job per Helm revision. It retries until Postgres accepts connections.
+migrations:
+  argocdHook: true

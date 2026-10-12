@@ -1,0 +1,42 @@
+# Argo CD Application: the cluster continuously reconciles itself to what is
+# committed here. CI builds, scans and publishes images; promotion to this
+# environment is a reviewed commit that changes the image tags in
+# gitops/values-local.yaml. Argo CD then syncs the Helm chart.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pantrypulse
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/PratyushMishra-2nd/DevopsProject.git
+    targetRevision: main
+    path: helm/pantrypulse
+    helm:
+      releaseName: pantrypulse
+      valueFiles:
+        - values-dev.yaml
+        - ../../gitops/values-local.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: pantrypulse
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 2m
+  # The HPA owns replica counts; do not fight it.
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers: [/spec/replicas]
