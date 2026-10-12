@@ -1,0 +1,73 @@
+# kube-prometheus-stack for the local kind cluster (Prometheus Operator,
+# Prometheus, Grafana, kube-state-metrics).
+#   helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
+#     --version 92.3.0 -n monitoring --create-namespace \
+#     -f monitoring/kube-prometheus-stack-values.yaml \
+#     --set-string grafana.adminPassword="$GRAFANA_PASSWORD"
+# (scripts/install-monitoring.sh does this and loads the PantryPulse dashboard.)
+
+# Small single-node cluster: skip components that are noisy or unreachable on kind.
+alertmanager:
+  enabled: false
+nodeExporter:
+  enabled: true
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeEtcd:
+  enabled: false
+kubeProxy:
+  enabled: false
+
+prometheus:
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    hosts: [prometheus.127.0.0.1.nip.io]
+    paths: [/]
+  prometheusSpec:
+    # Discover ServiceMonitors/PodMonitors/rules in every namespace without
+    # requiring the Helm release label (our app chart lives in "pantrypulse").
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    serviceMonitorNamespaceSelector: {}
+    scrapeInterval: 15s
+    retention: 12h
+    resources:
+      requests: { cpu: 100m, memory: 400Mi }
+      limits: { memory: 1Gi }
+
+grafana:
+  # adminPassword is passed with --set-string at install time; never committed.
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    hosts: [grafana.127.0.0.1.nip.io]
+    path: /
+  defaultDashboardsEnabled: true
+  defaultDashboardsTimezone: Asia/Kolkata
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      labelValue: "1"
+      searchNamespace: ALL
+  grafana.ini:
+    analytics:
+      check_for_updates: false
+      reporting_enabled: false
+    users:
+      default_theme: light
+  resources:
+    requests: { cpu: 50m, memory: 128Mi }
+    limits: { memory: 384Mi }
+
+kube-state-metrics:
+  resources:
+    requests: { cpu: 10m, memory: 32Mi }
+
+prometheusOperator:
+  resources:
+    requests: { cpu: 50m, memory: 64Mi }
