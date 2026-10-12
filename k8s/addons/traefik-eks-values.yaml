@@ -1,0 +1,20 @@
+# Traefik on EKS behind an internet-facing AWS Network Load Balancer.
+#   helm upgrade --install traefik traefik/traefik --version 41.7.1 \
+#     -n traefik --create-namespace -f k8s/addons/traefik-eks-values.yaml
+deployment:
+  replicas: 2
+service:
+  type: LoadBalancer
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+  name: traefik
+providers:
+  kubernetesCRD:
+    enabled: false
+resources:
+  requests: { cpu: 100m, memory: 96Mi }
+  limits: { cpu: 500m, memory: 256Mi }

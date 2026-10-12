@@ -1,0 +1,14 @@
+# Local cluster (kind + Traefik ingress + kube-prometheus-stack).
+#   helm upgrade --install pantrypulse ./helm/pantrypulse -n pantrypulse \
+#     -f helm/pantrypulse/values-dev.yaml \
+#     --set backend.image.tag=<sha> --set frontend.image.tag=<sha> \
+#     --set-string postgres.auth.password=<random>
+ingress:
+  enabled: true
+  host: pantrypulse.local
+
+backend:
+  logLevel: INFO
+
+serviceMonitor:
+  enabled: true

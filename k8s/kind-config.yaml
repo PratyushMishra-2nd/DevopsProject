@@ -1,0 +1,17 @@
+# Local cluster used for the live demo and the CI deploy job.
+# Host ports 80/443 are free on most machines; override with the
+# KIND_HTTP_PORT variable in scripts/cluster-up.sh if they are taken.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: pantrypulse
+nodes:
+  - role: control-plane
+    labels:
+      ingress-ready: "true"
+    extraPortMappings:
+      - containerPort: 80
+        hostPort: 80
+        listenAddress: "127.0.0.1"
+      - containerPort: 443
+        hostPort: 443
+        listenAddress: "127.0.0.1"

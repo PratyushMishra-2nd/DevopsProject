@@ -1,0 +1,87 @@
+# Default values for the PantryPulse chart.
+# Image tags are deliberately empty: every install must name the Git commit SHA
+# that CI built and scanned (helm --set backend.image.tag=<sha> ... or the
+# GitOps values file). There is no "latest".
+
+imagePullSecrets: []
+# - name: ghcr
+
+backend:
+  image:
+    repository: ghcr.io/pratyushmishra-2nd/pantrypulse-backend
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
+  logLevel: INFO
+  expiryWarningDays: 7
+  resources:
+    requests: { cpu: 100m, memory: 128Mi }
+    limits: { cpu: 500m, memory: 384Mi }
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+
+frontend:
+  image:
+    repository: ghcr.io/pratyushmishra-2nd/pantrypulse-frontend
+    tag: ""
+    pullPolicy: IfNotPresent
+  replicas: 2
+  resources:
+    requests: { cpu: 25m, memory: 32Mi }
+    limits: { cpu: 200m, memory: 128Mi }
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 75
+
+# Runs "alembic upgrade head" once per release revision, instead of every
+# backend replica racing to migrate at start-up.
+migrations:
+  enabled: true
+  # Under Argo CD the Job becomes a Sync hook (Argo renders with Revision=1,
+  # so a plain Job would be immutable across image changes).
+  argocdHook: false
+  backoffLimit: 10
+
+database:
+  name: pantrypulse
+  user: pantry
+  # Name of an existing Secret with key "password". When empty the chart
+  # creates one from postgres.auth.password.
+  existingSecret: ""
+  # Only used when postgres.enabled=false (e.g. Amazon RDS endpoint).
+  externalHost: ""
+
+postgres:
+  enabled: true
+  image: postgres:17-alpine3.24
+  auth:
+    password: ""
+  persistence:
+    size: 1Gi
+    storageClass: ""
+  resources:
+    requests: { cpu: 50m, memory: 128Mi }
+    limits: { cpu: 500m, memory: 512Mi }
+
+ingress:
+  enabled: true
+  className: traefik
+  host: pantrypulse.local
+  annotations: {}
+  tls: []
+
+podDisruptionBudget:
+  enabled: true
+
+networkPolicy:
+  enabled: true
+
+serviceMonitor:
+  enabled: false
+  interval: 15s
+  labels: {}

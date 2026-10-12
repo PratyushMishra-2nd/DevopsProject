@@ -1,0 +1,14 @@
+# AWS EKS profile (cluster from terraform/). Requires the EBS CSI driver
+# add-on (installed by Terraform) and the gp3 StorageClass from
+# k8s/storageclass-gp3.yaml. Traefik is exposed through an AWS NLB.
+ingress:
+  enabled: true
+  host: ""          # empty: answer on the load balancer's DNS name
+
+postgres:
+  persistence:
+    storageClass: gp3
+    size: 5Gi
+
+serviceMonitor:
+  enabled: true

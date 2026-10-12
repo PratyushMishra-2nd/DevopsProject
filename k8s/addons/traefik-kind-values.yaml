@@ -1,0 +1,39 @@
+# Traefik v3 as the Ingress controller on the local kind cluster.
+#   helm upgrade --install traefik traefik/traefik --version 41.7.1 \
+#     -n traefik --create-namespace -f k8s/addons/traefik-kind-values.yaml
+# ingress-nginx was archived upstream in March 2026 (no further security
+# fixes), see docs/adr/0004-traefik-ingress-controller.md.
+deployment:
+  replicas: 1
+# Run on the node that kind maps host ports 80/443 to.
+nodeSelector:
+  ingress-ready: "true"
+tolerations:
+  - key: node-role.kubernetes.io/control-plane
+    operator: Exists
+    effect: NoSchedule
+ports:
+  web:
+    hostPort: 80
+  websecure:
+    hostPort: 443
+service:
+  type: ClusterIP
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+  name: traefik
+providers:
+  kubernetesIngress:
+    enabled: true
+  kubernetesCRD:
+    enabled: false
+logs:
+  access:
+    enabled: false
+metrics:
+  prometheus:
+    entryPoint: metrics
+resources:
+  requests: { cpu: 50m, memory: 64Mi }
+  limits: { cpu: 500m, memory: 256Mi }

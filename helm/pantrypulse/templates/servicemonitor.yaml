@@ -1,0 +1,23 @@
+{{- if .Values.serviceMonitor.enabled }}
+# Picked up by the Prometheus Operator (kube-prometheus-stack): scrape /metrics
+# on every backend pod behind the backend Service.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "pp.name" . }}-backend
+  labels:
+    {{- include "pp.labels" . | nindent 4 }}
+    {{- with .Values.serviceMonitor.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  namespaceSelector:
+    matchNames: [{{ .Release.Namespace }}]
+  selector:
+    matchLabels:
+      {{- include "pp.selector" (dict "component" "backend" "root" .) | nindent 6 }}
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: {{ .Values.serviceMonitor.interval }}
+{{- end }}

@@ -1,0 +1,15 @@
+# EKS only: default gp3 StorageClass backed by the EBS CSI driver add-on that
+# terraform/ installs. EKS 1.30+ no longer marks gp2 as the default class.
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp3
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+parameters:
+  type: gp3
+  encrypted: "true"

@@ -1,0 +1,101 @@
+{{- $c := dict "component" "backend" "root" . -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "pp.name" . }}-backend
+  labels:
+    {{- include "pp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+data:
+  APP_ENV: {{ .Release.Namespace | quote }}
+  LOG_LEVEL: {{ .Values.backend.logLevel | quote }}
+  EXPIRY_WARNING_DAYS: {{ .Values.backend.expiryWarningDays | quote }}
+  REQUIRE_MIGRATIONS: "true"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pp.name" . }}-backend
+  labels:
+    {{- include "pp.labels" . | nindent 4 }}
+    {{- include "pp.selector" $c | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  {{- if not .Values.backend.autoscaling.enabled }}
+  replicas: {{ .Values.backend.replicas }}
+  {{- end }}
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: { maxUnavailable: 0, maxSurge: 1 }
+  selector:
+    matchLabels:
+      {{- include "pp.selector" $c | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "pp.labels" . | nindent 8 }}
+        {{- include "pp.selector" $c | nindent 8 }}
+        app.kubernetes.io/component: api
+      annotations:
+        checksum/config: {{ .Values.backend | toJson | sha256sum | trunc 16 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile: { type: RuntimeDefault }
+      terminationGracePeriodSeconds: 20
+      containers:
+        - name: api
+          image: {{ include "pp.backendImage" . }}
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          ports:
+            - { name: http, containerPort: 8000 }
+          envFrom:
+            - configMapRef:
+                name: {{ include "pp.name" . }}-backend
+          env:
+            {{- include "pp.backendEnv" . | nindent 12 }}
+          startupProbe:
+            httpGet: { path: /health, port: http }
+            periodSeconds: 3
+            failureThreshold: 20
+          readinessProbe:
+            httpGet: { path: /ready, port: http }
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet: { path: /health, port: http }
+            periodSeconds: 15
+            timeoutSeconds: 3
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              exec: { command: ["sleep", "5"] }
+          resources: {{- toYaml .Values.backend.resources | nindent 12 }}
+          securityContext: {{- include "pp.restrictedContainer" . | nindent 12 }}
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - name: tmp
+          emptyDir: { sizeLimit: 64Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "pp.name" . }}-backend
+  labels:
+    {{- include "pp.labels" . | nindent 4 }}
+    {{- include "pp.selector" $c | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "pp.selector" $c | nindent 4 }}
+  ports:
+    - { name: http, port: 8000, targetPort: http }

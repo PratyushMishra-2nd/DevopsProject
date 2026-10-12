@@ -1,0 +1,77 @@
+{{- $c := dict "component" "frontend" "root" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pp.name" . }}-frontend
+  labels:
+    {{- include "pp.labels" . | nindent 4 }}
+    {{- include "pp.selector" $c | nindent 4 }}
+    app.kubernetes.io/component: web
+spec:
+  {{- if not .Values.frontend.autoscaling.enabled }}
+  replicas: {{ .Values.frontend.replicas }}
+  {{- end }}
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: { maxUnavailable: 0, maxSurge: 1 }
+  selector:
+    matchLabels:
+      {{- include "pp.selector" $c | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "pp.labels" . | nindent 8 }}
+        {{- include "pp.selector" $c | nindent 8 }}
+        app.kubernetes.io/component: web
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: web
+          image: {{ include "pp.frontendImage" . }}
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          ports:
+            - { name: http, containerPort: 8080 }
+          env:
+            # Nginx proxies /api here when the app is opened without the Ingress.
+            - name: BACKEND_UPSTREAM
+              value: "{{ include "pp.name" . }}-backend:8000"
+          readinessProbe:
+            httpGet: { path: /healthz, port: http }
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /healthz, port: http }
+            periodSeconds: 15
+          resources: {{- toYaml .Values.frontend.resources | nindent 12 }}
+          securityContext: {{- include "pp.restrictedContainer" . | nindent 12 }}
+          volumeMounts:
+            # nginx renders its config and writes temp/pid files here; the image itself stays read-only.
+            - { name: nginx-conf, mountPath: /etc/nginx/conf.d }
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - name: nginx-conf
+          emptyDir: { sizeLimit: 1Mi }
+        - name: tmp
+          emptyDir: { sizeLimit: 32Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "pp.name" . }}-frontend
+  labels:
+    {{- include "pp.labels" . | nindent 4 }}
+    {{- include "pp.selector" $c | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "pp.selector" $c | nindent 4 }}
+  ports:
+    - { name: http, port: 80, targetPort: http }

@@ -1,0 +1,13 @@
+# Application namespace. Pod Security Admission enforces the "restricted"
+# profile, so any pod that runs as root, keeps capabilities or allows
+# privilege escalation is rejected at admission time.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pantrypulse
+  labels:
+    app.kubernetes.io/part-of: pantrypulse
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: latest
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted

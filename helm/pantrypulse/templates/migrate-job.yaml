@@ -1,0 +1,51 @@
+{{- if .Values.migrations.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  # A new Job per Helm revision; Argo CD replaces it as a Sync hook instead.
+  name: {{ include "pp.name" . }}-migrate-{{ .Release.Revision }}
+  labels:
+    {{- include "pp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: migrations
+  {{- if .Values.migrations.argocdHook }}
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+  {{- end }}
+spec:
+  backoffLimit: {{ .Values.migrations.backoffLimit }}
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        {{- include "pp.labels" . | nindent 8 }}
+        app.kubernetes.io/name: migrations
+        app.kubernetes.io/component: migrations
+    spec:
+      restartPolicy: OnFailure
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: alembic
+          image: {{ include "pp.backendImage" . }}
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          command: ["alembic", "upgrade", "head"]
+          env:
+            {{- include "pp.backendEnv" . | nindent 12 }}
+          resources:
+            requests: { cpu: 50m, memory: 96Mi }
+            limits: { cpu: 300m, memory: 256Mi }
+          securityContext: {{- include "pp.restrictedContainer" . | nindent 12 }}
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - name: tmp
+          emptyDir: {}
+{{- end }}

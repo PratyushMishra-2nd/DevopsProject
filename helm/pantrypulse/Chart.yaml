@@ -1,0 +1,12 @@
+apiVersion: v2
+name: pantrypulse
+description: PantryPulse - food bank stock and expiry tracker (React + FastAPI + PostgreSQL)
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+kubeVersion: ">=1.29.0-0"
+keywords: [fastapi, react, postgresql, food-bank]
+maintainers:
+  - name: Pratyush Mishra
+    url: https://github.com/PratyushMishra-2nd
+home: https://github.com/PratyushMishra-2nd/DevopsProject

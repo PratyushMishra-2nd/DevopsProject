@@ -1,0 +1,7 @@
+PantryPulse {{ .Values.backend.image.tag | trunc 7 }} is deployed to namespace {{ .Release.Namespace }}.
+
+  kubectl get pods,svc,ingress,hpa -n {{ .Release.Namespace }}
+{{- if .Values.ingress.enabled }}
+
+Open http://{{ .Values.ingress.host }}/  (API: /api, Swagger: /docs)
+{{- end }}
