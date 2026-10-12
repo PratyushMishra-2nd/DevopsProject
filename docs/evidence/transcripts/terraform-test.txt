@@ -1,0 +1,12 @@
+# recorded 2026-10-12 22:34:57 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ cd terraform && terraform test -no-color
+tests\plan.tftest.hcl... in progress
+  run "vpc_has_two_public_and_two_private_subnets"... pass
+  run "eks_cluster_and_node_group"... pass
+  run "nat_profile_moves_nodes_private"... pass
+  run "rejects_world_open_api"... pass
+tests\plan.tftest.hcl... tearing down
+tests\plan.tftest.hcl... pass
+
+Success! 4 passed, 0 failed.
+

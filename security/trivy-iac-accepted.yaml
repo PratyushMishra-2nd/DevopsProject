@@ -1,0 +1,40 @@
+# Trivy misconfiguration findings accepted for the low-cost demo profile.
+# Every entry is a deliberate trade-off, documented in docs/adr/0003-eks-without-nat.md
+# and docs/engineering/security.md. Anything not listed here fails CI at
+# HIGH/CRITICAL. Used with: trivy config --ignorefile security/trivy-iac-accepted.yaml
+misconfigurations:
+  - id: AWS-0040
+    statement: >-
+      Public EKS API endpoint is required so kubectl/Helm can run from a laptop
+      without a VPN; access is limited to api_allowed_cidrs (a /32), and a
+      validation rule rejects 0.0.0.0/0.
+  - id: AWS-0041
+    statement: >-
+      Same control as AWS-0040: the only public CIDR allowed is the operator's
+      own /32 from terraform.tfvars.
+  - id: AWS-0164
+    statement: >-
+      Without a NAT gateway (saves ~US$41/month) worker nodes need public IPs to
+      pull images; node security groups still only allow EKS-managed traffic.
+      enable_nat_gateway=true moves nodes to private subnets.
+  - id: AWS-0039
+    statement: >-
+      KMS envelope encryption of Secrets is available behind
+      enable_secrets_encryption=true; off for the short-lived demo (EKS still
+      encrypts etcd volumes at rest).
+  - id: AWS-0038
+    statement: >-
+      Control-plane logs are behind enable_control_plane_logs=true to avoid
+      CloudWatch ingestion cost for a cluster that lives for about an hour.
+  - id: AWS-0178
+    statement: >-
+      VPC flow logs are not enabled for the demo VPC; it carries no production
+      traffic and is destroyed after the walkthrough.
+  - id: KSV-0125
+    statement: >-
+      Trivy's default trusted-registry list does not include ghcr.io; our
+      images come from this repository's own GHCR namespace, pinned by commit SHA.
+  - id: KSV-01010
+    statement: >-
+      False positive: the ConfigMap holds LOG_LEVEL / APP_ENV, not secrets. The
+      database password lives only in a Secret.

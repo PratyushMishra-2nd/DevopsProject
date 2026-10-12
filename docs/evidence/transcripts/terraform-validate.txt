@@ -1,0 +1,6 @@
+# recorded 2026-10-12 22:34:53 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ cd terraform && terraform fmt -recursive -check && echo 'terraform fmt: all files formatted' && terraform validate -no-color
+terraform fmt: all files formatted
+Success! The configuration is valid.
+
+
