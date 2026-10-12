@@ -60,9 +60,13 @@ grafana:
       reporting_enabled: false
     users:
       default_theme: light
+  # Grafana 13 settles around 500Mi here. With a 384Mi limit the chart derived
+  # GOMEMLIMIT=345MiB and the Go GC ran non-stop (20+ cores, /api/health 503,
+  # liveness restarts); see docs/evidence/transcripts/incident-3-*.txt.
+  # Give it headroom and cap CPU so it can never starve the node again.
   resources:
-    requests: { cpu: 50m, memory: 128Mi }
-    limits: { memory: 384Mi }
+    requests: { cpu: 100m, memory: 256Mi }
+    limits: { cpu: "1", memory: 768Mi }
 
 kube-state-metrics:
   resources:

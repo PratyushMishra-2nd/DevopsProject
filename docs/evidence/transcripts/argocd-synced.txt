@@ -1,0 +1,36 @@
+# recorded 2026-10-13 01:00:56 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ argocd app get pantrypulse --grpc-web && kubectl -n argocd get applications
+Name:               argocd/pantrypulse
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          pantrypulse
+URL:                https://argocd.127.0.0.1.nip.io/applications/pantrypulse
+Source:
+- Repo:             https://github.com/PratyushMishra-2nd/DevopsProject.git
+  Target:           main
+  Path:             helm/pantrypulse
+  Helm Values:      values-dev.yaml,../../gitops/values-local.yaml
+SyncWindow:         Sync Allowed
+Sync Policy:        Automated (Prune)
+Sync Status:        Synced to main (8be415d)
+Health Status:      Healthy
+
+GROUP                  KIND                     NAMESPACE    NAME                   STATUS  HEALTH   HOOK  MESSAGE
+apps                   StatefulSet              pantrypulse  pantrypulse-postgres   Synced  Healthy        statefulset.apps/pantrypulse-postgres serverside-applied
+                       ConfigMap                pantrypulse  pantrypulse-backend    Synced                 
+                       Service                  pantrypulse  pantrypulse-backend    Synced  Healthy        
+                       Service                  pantrypulse  pantrypulse-frontend   Synced  Healthy        
+                       Service                  pantrypulse  pantrypulse-postgres   Synced  Healthy        
+apps                   Deployment               pantrypulse  pantrypulse-backend    Synced  Healthy        
+apps                   Deployment               pantrypulse  pantrypulse-frontend   Synced  Healthy        
+autoscaling            HorizontalPodAutoscaler  pantrypulse  pantrypulse-backend    Synced  Healthy        
+autoscaling            HorizontalPodAutoscaler  pantrypulse  pantrypulse-frontend   Synced  Healthy        
+batch                  Job                      pantrypulse  pantrypulse-migrate-1          Healthy        
+monitoring.coreos.com  ServiceMonitor           pantrypulse  pantrypulse-backend    Synced                 
+networking.k8s.io      Ingress                  pantrypulse  pantrypulse            Synced  Healthy        
+networking.k8s.io      NetworkPolicy            pantrypulse  pantrypulse-postgres   Synced                 
+policy                 PodDisruptionBudget      pantrypulse  pantrypulse-backend    Synced  Healthy        
+policy                 PodDisruptionBudget      pantrypulse  pantrypulse-frontend   Synced  Healthy        
+NAME          SYNC STATUS   HEALTH STATUS
+pantrypulse   Synced        Healthy
+

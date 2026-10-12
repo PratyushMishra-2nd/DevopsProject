@@ -1,0 +1,73 @@
+# recorded 2026-10-13 01:02:42 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ scripts/hpa-load.sh 161f84e908fd81435087c2ad7792182861675c70 240 && for i in $(seq 1 16); do date +%T; kubectl -n pantrypulse get hpa pantrypulse-backend --no-headers; kubectl -n pantrypulse top pods -l app.kubernetes.io/component=backend --no-headers; sleep 30; done && kubectl -n pantrypulse describe hpa pantrypulse-backend | sed -n '/Events:/,$p'
+namespace/pp-load created
+job.batch/hpa-load created
+Load running for 240s. Watch: kubectl -n pantrypulse get hpa -w
+01:02:42
+pantrypulse-backend   Deployment/pantrypulse-backend   cpu: 2%/70%   2     5     2     127m
+No resources found in pantrypulse namespace.
+01:03:12
+pantrypulse-backend   Deployment/pantrypulse-backend   cpu: 93%/70%   2     5     2     127m
+No resources found in pantrypulse namespace.
+01:03:43
+pantrypulse-backend   Deployment/pantrypulse-backend   cpu: 357%/70%   2     5     5     128m
+No resources found in pantrypulse namespace.
+01:04:13
+pantrypulse-backend   Deployment/pantrypulse-backend   cpu: 228%/70%   2     5     5     128m
+No resources found in pantrypulse namespace.
+01:04:43
+pantrypulse-backend   Deployment/pantrypulse-backend   cpu: 214%/70%   2     5     5     129m
+No resources found in pantrypulse namespace.
+01:05:13
+pantrypulse-backend   Deployment/pantrypulse-backend   cpu: 219%/70%   2     5     5     129m
+No resources found in pantrypulse namespace.
+01:05:44
+pantrypulse-backend   Deployment/pantrypulse-backend   cpu: 233%/70%   2     5     5     130m
+No resources found in pantrypulse namespace.
+01:06:14
+pantrypulse-backend   Deployment/pantrypulse-backend   cpu: 242%/70%   2     5     5     130m
+No resources found in pantrypulse namespace.
+01:06:44
+pantrypulse-backend   Deployment/pantrypulse-backend   cpu: 226%/70%   2     5     5     131m
+No resources found in pantrypulse namespace.
+01:07:15
+pantrypulse-backend   Deployment/pantrypulse-backend   cpu: 51%/70%   2     5     5     131m
+No resources found in pantrypulse namespace.
+01:07:45
+pantrypulse-backend   Deployment/pantrypulse-backend   cpu: 2%/70%   2     5     5     132m
+No resources found in pantrypulse namespace.
+01:08:15
+pantrypulse-backend   Deployment/pantrypulse-backend   cpu: 3%/70%   2     5     5     132m
+No resources found in pantrypulse namespace.
+01:08:46
+pantrypulse-backend   Deployment/pantrypulse-backend   cpu: 2%/70%   2     5     5     133m
+No resources found in pantrypulse namespace.
+01:09:16
+pantrypulse-backend   Deployment/pantrypulse-backend   cpu: 3%/70%   2     5     4     133m
+No resources found in pantrypulse namespace.
+01:09:46
+pantrypulse-backend   Deployment/pantrypulse-backend   cpu: 2%/70%   2     5     2     134m
+No resources found in pantrypulse namespace.
+01:10:17
+pantrypulse-backend   Deployment/pantrypulse-backend   cpu: 2%/70%   2     5     2     134m
+No resources found in pantrypulse namespace.
+Events:
+  Type     Reason                        Age                   From                       Message
+  ----     ------                        ----                  ----                       -------
+  Normal   SuccessfulRescale             135m                  horizontal-pod-autoscaler  New size: 2; reason: Current number of replicas below Spec.MinReplicas
+  Warning  FailedGetResourceMetric       134m (x3 over 134m)   horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: no metrics returned from resource metrics API
+  Warning  FailedComputeMetricsReplicas  134m (x3 over 134m)   horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: no metrics returned from resource metrics API
+  Warning  FailedComputeMetricsReplicas  131m (x9 over 134m)   horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server is currently unable to handle the request (get pods.metrics.k8s.io)
+  Warning  FailedGetResourceMetric       129m (x11 over 134m)  horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server is currently unable to handle the request (get pods.metrics.k8s.io)
+  Warning  FailedComputeMetricsReplicas  123m (x12 over 126m)  horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server is currently unable to handle the request (get pods.metrics.k8s.io)
+  Warning  FailedGetResourceMetric       121m (x21 over 126m)  horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server is currently unable to handle the request (get pods.metrics.k8s.io)
+  Warning  FailedComputeMetricsReplicas  112m (x12 over 115m)  horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server is currently unable to handle the request (get pods.metrics.k8s.io)
+  Warning  FailedGetResourceMetric       112m (x13 over 115m)  horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server is currently unable to handle the request (get pods.metrics.k8s.io)
+  Warning  FailedGetResourceMetric       110m (x3 over 111m)   horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: no metrics returned from resource metrics API
+  Warning  FailedGetResourceMetric       26m (x4 over 26m)     horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server is currently unable to handle the request (get pods.metrics.k8s.io)
+  Warning  FailedComputeMetricsReplicas  26m (x4 over 26m)     horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server is currently unable to handle the request (get pods.metrics.k8s.io)
+  Normal   SuccessfulRescale             7m41s                 horizontal-pod-autoscaler  New size: 3; reason: cpu resource utilization (percentage of request) above target
+  Normal   SuccessfulRescale             7m26s                 horizontal-pod-autoscaler  New size: 5; reason: cpu resource utilization (percentage of request) above target
+  Normal   SuccessfulRescale             116s                  horizontal-pod-autoscaler  New size: 4; reason: All metrics below target
+  Normal   SuccessfulRescale             101s                  horizontal-pod-autoscaler  New size: 2; reason: All metrics below target
+

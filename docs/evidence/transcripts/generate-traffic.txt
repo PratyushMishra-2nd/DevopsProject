@@ -1,0 +1,10 @@
+# recorded 2026-10-13 01:01:03 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ scripts/generate-traffic.sh http://pantrypulse.127.0.0.1.nip.io:8088 300
+sent 50 rounds
+sent 100 rounds
+sent 150 rounds
+sent 200 rounds
+sent 250 rounds
+sent 300 rounds
+done: 300 rounds against http://pantrypulse.127.0.0.1.nip.io:8088
+

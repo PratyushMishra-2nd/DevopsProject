@@ -1,0 +1,33 @@
+# recorded 2026-10-13 01:08:52 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ kubectl -n monitoring get pods -l app.kubernetes.io/name=grafana && kubectl -n monitoring top pod -l app.kubernetes.io/name=grafana --containers && kubectl -n monitoring get deploy monitoring-grafana -o jsonpath='{range .spec.template.spec.containers[?(@.name=="grafana")]}limits={.resources.limits}{"\n"}{range .env[?(@.name=="GOMEMLIMIT")]}GOMEMLIMIT={.value}{"\n"}{end}{end}' && curl -s -o /dev/null -w 'grafana /api/health -> %{http_code}\n' http://grafana.127.0.0.1.nip.io:8088/api/health && kubectl -n monitoring describe pod -l app.kubernetes.io/name=grafana | grep -E 'Unhealthy|Killing' | tail -3
+NAME                                  READY   STATUS    RESTARTS       AGE
+monitoring-grafana-7cb4c4cbf4-s8x9s   2/3     Running   10 (15m ago)   141m
+POD                                   NAME                     CPU(cores)   MEMORY(bytes)   
+monitoring-grafana-7cb4c4cbf4-s8x9s   grafana                  23317m       344Mi           
+monitoring-grafana-7cb4c4cbf4-s8x9s   grafana-sc-dashboard     1m           90Mi            
+monitoring-grafana-7cb4c4cbf4-s8x9s   grafana-sc-datasources   1m           84Mi            
+limits={"memory":"384Mi"}
+GOMEMLIMIT=345MiB
+grafana /api/health -> 503
+  Warning  Unhealthy       21m                   kubelet            Liveness probe failed: HTTP probe failed with statuscode: 503
+  Normal   Killing         16m                   kubelet            Container grafana failed liveness probe, will be restarted
+  Warning  Unhealthy       14s (x53 over 22m)    kubelet            Readiness probe failed: Get "http://10.244.0.5:3000/api/health": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+
+# recorded 2026-10-13 01:09:01 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ scripts/install-monitoring.sh | tail -2 && kubectl -n monitoring rollout status deploy/monitoring-grafana --timeout=300s && sleep 60 && kubectl -n monitoring get pods -l app.kubernetes.io/name=grafana && kubectl -n monitoring top pod -l app.kubernetes.io/name=grafana --containers && curl -s -w '\ngrafana /api/health -> %{http_code}\n' http://grafana.127.0.0.1.nip.io:8088/api/health
+Grafana:    http://grafana.127.0.0.1.nip.io:8088   (user admin, password in secret monitoring/grafana-admin-bootstrap)
+Prometheus: http://prometheus.127.0.0.1.nip.io:8088/targets
+deployment "monitoring-grafana" successfully rolled out
+NAME                                  READY   STATUS    RESTARTS   AGE
+monitoring-grafana-5d44694679-k5pn9   3/3     Running   0          88s
+POD                                   NAME                     CPU(cores)   MEMORY(bytes)   
+monitoring-grafana-5d44694679-k5pn9   grafana                  10m          498Mi           
+monitoring-grafana-5d44694679-k5pn9   grafana-sc-dashboard     1m           84Mi            
+monitoring-grafana-5d44694679-k5pn9   grafana-sc-datasources   1m           87Mi            
+{
+  "database": "ok",
+  "version": "13.2.3",
+  "commit": "90ffed056f0884267356c12a0eeb72a022af53f1"
+}
+grafana /api/health -> 200
+
