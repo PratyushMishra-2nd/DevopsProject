@@ -18,6 +18,8 @@ How the video was made:
 - **Recording:** the walkthrough was captured with headless Chromium (Playwright) against the running system.
 - **Terminal panels:** these are a browser page streaming the output of commands executed live in the repository, at the moment of recording.
 - **Speed-ups:** the long CI wait and the Argo CD sync wait are sped up, and the on-screen caption says so.
+- **CI/CD segment:** recorded live on 13 Oct 2026: the push of commit `78f8ecf` and GitHub Actions run 38302122963 (success). The completed-run view and the GHCR page that follow the sped-up wait were captured right after the run finished.
+- **Argo CD segment:** the promotion commit `23fdafe` was made and pushed live. The final Synced/Healthy view was recorded about a minute later. During the rollout the app showed *Degraded* for a few seconds, because the HPA had no CPU metrics yet for the new pods; the caption says so.
 
 ## Part 1 - Slides (`presentation.pptx` / `presentation.pdf`)
 

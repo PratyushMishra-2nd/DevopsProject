@@ -107,7 +107,9 @@ Two notes on hosts and ports:
 
 | Evidence | Shows |
 |----------|-------|
-| [`../../demo/`](../../demo/) | `presentation.mp4`, `presentation.pptx`, `presentation.pdf`, `preview.gif`, `DEMO-SCRIPT.md` |
+| [`../../demo/`](../../demo/) | `presentation.mp4` (12 min, 1280×720, narrated slides, then a live walkthrough), `presentation.pptx`, `presentation.pdf`, `preview.gif`, `DEMO-SCRIPT.md` (narration plus how each segment was recorded) |
+| Video, CI/CD segment | A live push of `78f8ecf` and GitHub Actions run [38302122963](https://github.com/PratyushMishra-2nd/DevopsProject/actions/runs/38302122963) through to success (the wait is sped up and captioned as such) |
+| Video, Argo CD segment | A live GitOps promotion of that build (commit `23fdafe`); Argo CD syncs and `/api/info` reports `78f8ecf` |
 | [`../../README.md`](../../README.md), [`../adr/`](../adr/), [`../engineering/`](../engineering/), [`../runbooks/`](../runbooks/) | Documentation |
 
 ## Full transcript index

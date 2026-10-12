@@ -29,9 +29,11 @@ Around that application sits the full delivery platform:
 |---|---|
 | Repository | https://github.com/PratyushMishra-2nd/DevopsProject |
 | Images | `ghcr.io/pratyushmishra-2nd/pantrypulse-backend:<sha>`, `ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:<sha>` |
-| Demo | [`demo/`](demo/): video, slides (PPTX and PDF), preview GIF, script |
+| Demo | [`demo/presentation.mp4`](demo/presentation.mp4) (12 min: slides, then a live walkthrough), [slides PPTX](demo/presentation.pptx) / [PDF](demo/presentation.pdf), [script](demo/DEMO-SCRIPT.md) |
 | Evidence | [`docs/evidence/EVIDENCE-MANIFEST.md`](docs/evidence/EVIDENCE-MANIFEST.md) |
 | Rubric checklist | [`docs/SUBMISSION-CHECKLIST.md`](docs/SUBMISSION-CHECKLIST.md) |
+
+![PantryPulse demo preview: slides, the app through the Ingress, CI, Argo CD, Prometheus and Grafana](demo/preview.gif)
 
 > **AWS status: PENDING EXTERNAL ACCESS.**
 > - The Terraform for VPC + EKS is complete and verified with

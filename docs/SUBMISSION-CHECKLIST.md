@@ -114,7 +114,7 @@ The cluster is local kind; EKS is pending (see above).
    [docs/runbooks/aws-eks.md](runbooks/aws-eks.md). It covers apply, the
    Console screenshots, deploy, and destroy. Add the screenshots to
    `docs/evidence/screenshots/` as `m7-aws-*.png`.
-3. **Video narration.** `demo/presentation.mp4` is a recorded walkthrough
-   with on-screen captions; it has no voice-over. Record your own narration
-   over it if the course expects one (`demo/DEMO-SCRIPT.md` has the
-   script).
+3. **Video narration.** `demo/presentation.mp4` is narrated with the
+   built-in Windows text-to-speech voice and carries on-screen captions. If
+   the course expects your own voice, re-record the narration from
+   `demo/DEMO-SCRIPT.md`.
