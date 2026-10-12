@@ -1,0 +1,6 @@
+# recorded 2026-10-13 00:54:28 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ helm upgrade traefik traefik/traefik --version 41.7.1 -n traefik -f k8s/addons/traefik-kind-values.yaml --wait --timeout 5m >/dev/null && helm list -n traefik && sleep 15 && kubectl get ingress -A
+level=WARN msg="upgrade failed" name=traefik error="resource Deployment/traefik/traefik not ready. status: InProgress, message: Pending termination: 1\ncontext deadline exceeded"
+Error: UPGRADE FAILED: resource Deployment/traefik/traefik not ready. status: InProgress, message: Pending termination: 1
+context deadline exceeded
+

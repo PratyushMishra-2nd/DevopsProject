@@ -1,0 +1,29 @@
+# recorded 2026-10-13 00:59:43 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ kubectl -n traefik get pods && kubectl -n traefik describe pod traefik-db49f444b-nsffd | sed -n '/Events:/,$p' && kubectl -n traefik get deploy traefik -o jsonpath='{.spec.strategy}{"\n"}'
+NAME                       READY   STATUS    RESTARTS      AGE
+traefik-646554c6b4-bmbt8   1/1     Running   4 (16m ago)   134m
+traefik-db49f444b-nsffd    0/1     Pending   0             5m15s
+Events:
+  Type     Reason            Age    From               Message
+  ----     ------            ----   ----               -------
+  Warning  FailedScheduling  5m15s  default-scheduler  0/1 nodes are available: 1 node(s) didn't have free ports for the requested pod ports. preemption: 0/1 nodes are available: 1 No preemption victims found for incoming pod.
+{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0},"type":"RollingUpdate"}
+
+# recorded 2026-10-13 00:59:51 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ helm upgrade traefik traefik/traefik --version 41.7.1 -n traefik -f k8s/addons/traefik-kind-values.yaml --wait --timeout 5m | head -6 && kubectl -n traefik get pods && kubectl -n traefik get deploy traefik -o jsonpath='{.spec.strategy}{"\n"}' && sleep 10 && kubectl get ingress -A && curl -s -o /dev/null -w 'pantrypulse via Traefik -> %{http_code}\n' http://pantrypulse.127.0.0.1.nip.io:8088/
+Release "traefik" has been upgraded. Happy Helming!
+NAME: traefik
+LAST DEPLOYED: Tue Oct 13 00:59:51 2026
+NAMESPACE: traefik
+STATUS: deployed
+REVISION: 3
+NAME                      READY   STATUS    RESTARTS   AGE
+traefik-db49f444b-nsffd   1/1     Running   0          5m36s
+{"rollingUpdate":{"maxSurge":0,"maxUnavailable":1},"type":"RollingUpdate"}
+NAMESPACE     NAME                                    CLASS     HOSTS                          ADDRESS     PORTS   AGE
+argocd        argocd-server                           traefik   argocd.127.0.0.1.nip.io        127.0.0.1   80      11m
+monitoring    monitoring-grafana                      traefik   grafana.127.0.0.1.nip.io       127.0.0.1   80      133m
+monitoring    monitoring-kube-prometheus-prometheus   traefik   prometheus.127.0.0.1.nip.io    127.0.0.1   80      133m
+pantrypulse   pantrypulse                             traefik   pantrypulse.127.0.0.1.nip.io   127.0.0.1   80      124m
+pantrypulse via Traefik -> 200
+
