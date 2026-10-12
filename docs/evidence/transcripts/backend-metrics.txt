@@ -1,0 +1,30 @@
+# recorded 2026-10-13 01:15:07 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ kubectl -n pantrypulse exec deploy/pantrypulse-backend -- python -c "import urllib.request;print(urllib.request.urlopen('http://127.0.0.1:8000/metrics').read().decode())" | grep -E '^# TYPE |^http_requests_total|^pantrypulse_' | grep -v _created | head -30
+# TYPE python_gc_objects_collected_total counter
+# TYPE python_gc_objects_uncollectable_total counter
+# TYPE python_gc_collections_total counter
+# TYPE python_info gauge
+# TYPE process_virtual_memory_bytes gauge
+# TYPE process_resident_memory_bytes gauge
+# TYPE process_start_time_seconds gauge
+# TYPE process_cpu_seconds_total counter
+# TYPE process_open_fds gauge
+# TYPE process_max_fds gauge
+# TYPE pantrypulse_dispatched_quantity_total counter
+pantrypulse_dispatched_quantity_total{category="grains",unit="kg"} 4.0
+# TYPE http_requests_total counter
+http_requests_total{handler="/health",method="GET",status="200"} 8.0
+http_requests_total{handler="/ready",method="GET",status="200"} 23.0
+http_requests_total{handler="/api/dispatches",method="GET",status="200"} 4.0
+http_requests_total{handler="/api/lots/summary",method="GET",status="200"} 4.0
+http_requests_total{handler="/api/donors",method="GET",status="200"} 9.0
+http_requests_total{handler="/api/lots",method="GET",status="200"} 12.0
+http_requests_total{handler="/api/info",method="GET",status="200"} 1.0
+http_requests_total{handler="/api/lots",method="POST",status="201"} 1.0
+http_requests_total{handler="/api/lots/{lot_id}",method="GET",status="404"} 1.0
+http_requests_total{handler="/api/dispatches",method="POST",status="201"} 1.0
+# TYPE http_request_size_bytes summary
+# TYPE http_response_size_bytes summary
+# TYPE http_request_duration_highr_seconds histogram
+# TYPE http_request_duration_seconds histogram
+

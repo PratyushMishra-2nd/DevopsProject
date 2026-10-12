@@ -1,0 +1,35 @@
+# recorded 2026-10-13 01:11:55 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ curl -s http://pantrypulse.127.0.0.1.nip.io:8088/api/info; echo; scripts/promote.sh 8be415d7e29164a997390aad36d32623c3548548 && git show --stat --oneline HEAD | head -5 && git diff HEAD~1 -- gitops/values-local.yaml | grep -E '^[-+] '
+{"service":"PantryPulse API","environment":"pantrypulse","git_sha":"161f84e908fd81435087c2ad7792182861675c70"}
+[main 7038d15] Promote build 8be415d to the local GitOps environment
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+Committed. Push to main and Argo CD will sync within its reconciliation interval.
+7038d15 Promote build 8be415d to the local GitOps environment
+ gitops/values-local.yaml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+-    tag: "161f84e908fd81435087c2ad7792182861675c70"
++    tag: "8be415d7e29164a997390aad36d32623c3548548"
+-    tag: "161f84e908fd81435087c2ad7792182861675c70"
++    tag: "8be415d7e29164a997390aad36d32623c3548548"
+
+# recorded 2026-10-13 01:12:13 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ for i in $(seq 1 30); do s=$(kubectl -n argocd get application pantrypulse -o jsonpath='{.status.sync.revision}/{.status.sync.status}/{.status.health.status}'); echo "$(date +%T) $s"; case $s in 7038d15*/Synced/Healthy) break;; esac; sleep 10; done; kubectl -n pantrypulse get pods -o custom-columns=NAME:.metadata.name,STATUS:.status.phase,IMAGE:.spec.containers[0].image && curl -s http://pantrypulse.127.0.0.1.nip.io:8088/api/info; echo; argocd app history pantrypulse --grpc-web
+01:12:13 7038d153dc08aaaa3ba7ed8d4b06b98eb1d1a1d8/OutOfSync/Healthy
+01:12:23 7038d153dc08aaaa3ba7ed8d4b06b98eb1d1a1d8/Synced/Degraded
+01:12:33 7038d153dc08aaaa3ba7ed8d4b06b98eb1d1a1d8/Synced/Degraded
+01:12:44 7038d153dc08aaaa3ba7ed8d4b06b98eb1d1a1d8/Synced/Degraded
+01:12:54 7038d153dc08aaaa3ba7ed8d4b06b98eb1d1a1d8/Synced/Healthy
+NAME                                    STATUS      IMAGE
+pantrypulse-backend-7cfc4b489c-j4q2s    Running     ghcr.io/pratyushmishra-2nd/pantrypulse-backend:8be415d7e29164a997390aad36d32623c3548548
+pantrypulse-backend-7cfc4b489c-pmmpk    Running     ghcr.io/pratyushmishra-2nd/pantrypulse-backend:8be415d7e29164a997390aad36d32623c3548548
+pantrypulse-frontend-5cdc75585d-fbcpr   Running     ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:8be415d7e29164a997390aad36d32623c3548548
+pantrypulse-frontend-5cdc75585d-sp4hn   Running     ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:8be415d7e29164a997390aad36d32623c3548548
+pantrypulse-migrate-1-rrh5f             Succeeded   ghcr.io/pratyushmishra-2nd/pantrypulse-backend:8be415d7e29164a997390aad36d32623c3548548
+pantrypulse-migrate-2-q6mtg             Succeeded   ghcr.io/pratyushmishra-2nd/pantrypulse-backend:161f84e908fd81435087c2ad7792182861675c70
+pantrypulse-postgres-0                  Running     postgres:17-alpine3.24
+{"service":"PantryPulse API","environment":"pantrypulse","git_sha":"8be415d7e29164a997390aad36d32623c3548548"}
+SOURCE  https://github.com/PratyushMishra-2nd/DevopsProject.git
+ID      DATE                           REVISION
+0       2026-10-13 00:51:00 +0530 IST  main (3a0482f)
+1       2026-10-13 01:12:32 +0530 IST  main (7038d15)
+

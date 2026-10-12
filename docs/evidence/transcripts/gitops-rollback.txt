@@ -1,0 +1,27 @@
+# recorded 2026-10-13 01:13:08 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ git log --oneline -2 && git diff HEAD~1 -- gitops/values-local.yaml | grep -E '^[-+] ' && for i in $(seq 1 30); do s=$(kubectl -n argocd get application pantrypulse -o jsonpath='{.status.sync.revision}/{.status.sync.status}/{.status.health.status}'); echo "$(date +%T) $s"; case $s in c1fc74c*/Synced/Healthy) break;; esac; sleep 10; done; kubectl -n pantrypulse get pods -l app.kubernetes.io/component -o custom-columns=NAME:.metadata.name,STATUS:.status.phase,IMAGE:.spec.containers[0].image && curl -s http://pantrypulse.127.0.0.1.nip.io:8088/api/info; echo; argocd app history pantrypulse --grpc-web
+c1fc74c Roll back the local environment to build 161f84e
+7038d15 Promote build 8be415d to the local GitOps environment
+-    tag: "8be415d7e29164a997390aad36d32623c3548548"
++    tag: "161f84e908fd81435087c2ad7792182861675c70"
+-    tag: "8be415d7e29164a997390aad36d32623c3548548"
++    tag: "161f84e908fd81435087c2ad7792182861675c70"
+01:13:08 c1fc74c81b73508410a4ccf0beccd53a2fd84499/OutOfSync/Healthy
+01:13:19 c1fc74c81b73508410a4ccf0beccd53a2fd84499/Synced/Healthy
+NAME                                    STATUS      IMAGE
+pantrypulse-backend-7cfc4b489c-j4q2s    Succeeded   ghcr.io/pratyushmishra-2nd/pantrypulse-backend:8be415d7e29164a997390aad36d32623c3548548
+pantrypulse-backend-7cfc4b489c-pmmpk    Running     ghcr.io/pratyushmishra-2nd/pantrypulse-backend:8be415d7e29164a997390aad36d32623c3548548
+pantrypulse-backend-864f46c67d-lxhw5    Running     ghcr.io/pratyushmishra-2nd/pantrypulse-backend:161f84e908fd81435087c2ad7792182861675c70
+pantrypulse-backend-864f46c67d-w2stx    Running     ghcr.io/pratyushmishra-2nd/pantrypulse-backend:161f84e908fd81435087c2ad7792182861675c70
+pantrypulse-frontend-786b99fdb7-hb94k   Running     ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:161f84e908fd81435087c2ad7792182861675c70
+pantrypulse-frontend-786b99fdb7-rnhxf   Running     ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:161f84e908fd81435087c2ad7792182861675c70
+pantrypulse-migrate-1-qbdlp             Succeeded   ghcr.io/pratyushmishra-2nd/pantrypulse-backend:161f84e908fd81435087c2ad7792182861675c70
+pantrypulse-migrate-2-q6mtg             Succeeded   ghcr.io/pratyushmishra-2nd/pantrypulse-backend:161f84e908fd81435087c2ad7792182861675c70
+pantrypulse-postgres-0                  Running     postgres:17-alpine3.24
+{"service":"PantryPulse API","environment":"pantrypulse","git_sha":"161f84e908fd81435087c2ad7792182861675c70"}
+SOURCE  https://github.com/PratyushMishra-2nd/DevopsProject.git
+ID      DATE                           REVISION
+0       2026-10-13 00:51:00 +0530 IST  main (3a0482f)
+1       2026-10-13 01:12:32 +0530 IST  main (7038d15)
+2       2026-10-13 01:13:15 +0530 IST  main (c1fc74c)
+

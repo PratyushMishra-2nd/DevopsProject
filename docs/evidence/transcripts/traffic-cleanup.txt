@@ -1,0 +1,5 @@
+# recorded 2026-10-13 01:13:42 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ kubectl -n pantrypulse exec pantrypulse-postgres-0 -- sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "DELETE FROM dispatches WHERE lot_id IN (SELECT id FROM stock_lots WHERE item_name LIKE '\''Traffic test rice%'\'')" -c "DELETE FROM stock_lots WHERE item_name LIKE '\''Traffic test rice%'\''"' && curl -s http://pantrypulse.127.0.0.1.nip.io:8088/api/lots/summary
+DELETE 60
+DELETE 60
+{"active_lots":14,"expiring_soon":6,"expired_on_shelf":1,"dispatched_this_week":105.0,"partners_served":3,"by_category":{"beverages":1,"produce":4,"dairy":3,"grains":2,"protein":2,"canned":1,"bakery":1},"by_storage":{"ambient":7,"chilled":6,"frozen":1},"warning_days":7}

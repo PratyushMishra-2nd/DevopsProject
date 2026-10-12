@@ -1,0 +1,207 @@
+# recorded 2026-10-13 01:18:36 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ gh run view 38298132560 --log --job 114974385509 | awk -F'\t' '$2 ~ /^(Trivy scan|Full vulnerability|Push images)/ {sub(/^[0-9T:.-]+Z ?/, "", $3); if ($3 !~ /MiB|^[0-9T:.-]+Z$|^$|##\[/) print $2 " | " $3}'
+Trivy scan - backend image (gate) | trivy image --exit-code 1 --severity HIGH,CRITICAL --ignore-unfixed \
+Trivy scan - backend image (gate) |   --scanners vuln,secret --format table "${IMAGE_PREFIX}-backend:${GITHUB_SHA}" | tee trivy-backend.txt
+Trivy scan - backend image (gate) | shell: /usr/bin/bash -e {0}
+Trivy scan - backend image (gate) | env:
+Trivy scan - backend image (gate) |   TRIVY_VERSION: 0.75.0
+Trivy scan - backend image (gate) |   TRIVY_SHA256: c6e65abddb348e25f10549df887045629cf28cc72453cd1c63acb717316b3f3f
+Trivy scan - backend image (gate) |   GITLEAKS_VERSION: 8.30.1
+Trivy scan - backend image (gate) |   GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+Trivy scan - backend image (gate) |   TRIVY_DB_REPOSITORY: mirror.gcr.io/aquasec/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2,ghcr.io/aquasecurity/trivy-db:2
+Trivy scan - backend image (gate) |   IMAGE_PREFIX: ghcr.io/pratyushmishra-2nd/pantrypulse
+Trivy scan - backend image (gate) | Report Summary
+Trivy scan - backend image (gate) | ┌──────────────────────────────────────────────────────────────────────────────────┬────────────┬─────────────────┬─────────┐
+Trivy scan - backend image (gate) | │                                      Target                                      │    Type    │ Vulnerabilities │ Secrets │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ ghcr.io/pratyushmishra-2nd/pantrypulse-backend:8be415d7e29164a997390aad36d32623- │   debian   │        0        │    -    │
+Trivy scan - backend image (gate) | │ c3548548 (debian 13.7)                                                           │            │                 │         │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/alembic-1.20.0.dist-info/METADATA          │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/annotated_doc-0.0.5.dist-info/METADATA     │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/annotated_types-0.8.0.dist-info/METADATA   │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/anyio-4.15.1.dist-info/METADATA            │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/click-8.5.0.dist-info/METADATA             │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/dnspython-2.9.0.dist-info/METADATA         │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/email_validator-2.3.0.dist-info/METADATA   │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/fastapi-0.143.0.dist-info/METADATA         │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/h11-0.16.0.dist-info/METADATA              │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/httptools-0.9.0.dist-info/METADATA         │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/idna-3.20.dist-info/METADATA               │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/mako-1.4.3.dist-info/METADATA              │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/markupsafe-3.0.4.dist-info/METADATA        │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/opentelemetry_api-1.45.1.dist-info/METADA- │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | │ TA                                                                               │            │                 │         │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/prometheus_client-0.26.0.dist-info/METADA- │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | │ TA                                                                               │            │                 │         │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/prometheus_fastapi_instrumentator-8.1.0.d- │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | │ ist-info/METADATA                                                                │            │                 │         │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/psycopg-3.3.6.dist-info/METADATA           │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/psycopg_binary-3.3.6.dist-info/METADATA    │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/pydantic-2.14.1.dist-info/METADATA         │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/pydantic_core-2.50.1.dist-info/METADATA    │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/pydantic_settings-2.15.0.dist-info/METADA- │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | │ TA                                                                               │            │                 │         │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/python_dotenv-1.2.4.dist-info/METADATA     │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/pyyaml-6.0.3.dist-info/METADATA            │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/sqlalchemy-2.1.4.dist-info/METADATA        │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/starlette-1.7.0.dist-info/METADATA         │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/typing_extensions-4.16.0.dist-info/METADA- │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | │ TA                                                                               │            │                 │         │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/typing_inspection-0.4.4.dist-info/METADATA │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/uvicorn-0.54.0.dist-info/METADATA          │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/uvloop-0.23.0.dist-info/METADATA           │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/watchfiles-1.3.0.dist-info/METADATA        │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────────┼─────────────────┼─────────┤
+Trivy scan - backend image (gate) | │ opt/venv/lib/python3.12/site-packages/websockets-17.2.dist-info/METADATA         │ python-pkg │        0        │    -    │
+Trivy scan - backend image (gate) | └──────────────────────────────────────────────────────────────────────────────────┴────────────┴─────────────────┴─────────┘
+Trivy scan - backend image (gate) | Legend:
+Trivy scan - backend image (gate) | - '-': Not scanned
+Trivy scan - backend image (gate) | - '0': Clean (no security findings detected)
+Trivy scan - frontend image (gate) | trivy image --exit-code 1 --severity HIGH,CRITICAL --ignore-unfixed \
+Trivy scan - frontend image (gate) |   --scanners vuln,secret --format table "${IMAGE_PREFIX}-frontend:${GITHUB_SHA}" | tee trivy-frontend.txt
+Trivy scan - frontend image (gate) | shell: /usr/bin/bash -e {0}
+Trivy scan - frontend image (gate) | env:
+Trivy scan - frontend image (gate) |   TRIVY_VERSION: 0.75.0
+Trivy scan - frontend image (gate) |   TRIVY_SHA256: c6e65abddb348e25f10549df887045629cf28cc72453cd1c63acb717316b3f3f
+Trivy scan - frontend image (gate) |   GITLEAKS_VERSION: 8.30.1
+Trivy scan - frontend image (gate) |   GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+Trivy scan - frontend image (gate) |   TRIVY_DB_REPOSITORY: mirror.gcr.io/aquasec/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2,ghcr.io/aquasecurity/trivy-db:2
+Trivy scan - frontend image (gate) |   IMAGE_PREFIX: ghcr.io/pratyushmishra-2nd/pantrypulse
+Trivy scan - frontend image (gate) | Report Summary
+Trivy scan - frontend image (gate) | ┌──────────────────────────────────────────────────────────────────────────────────┬────────┬─────────────────┬─────────┐
+Trivy scan - frontend image (gate) | │                                      Target                                      │  Type  │ Vulnerabilities │ Secrets │
+Trivy scan - frontend image (gate) | ├──────────────────────────────────────────────────────────────────────────────────┼────────┼─────────────────┼─────────┤
+Trivy scan - frontend image (gate) | │ ghcr.io/pratyushmishra-2nd/pantrypulse-frontend:8be415d7e29164a997390aad36d3262- │ alpine │        0        │    -    │
+Trivy scan - frontend image (gate) | │ 3c3548548 (alpine 3.24.2)                                                        │        │                 │         │
+Trivy scan - frontend image (gate) | └──────────────────────────────────────────────────────────────────────────────────┴────────┴─────────────────┴─────────┘
+Trivy scan - frontend image (gate) | Legend:
+Trivy scan - frontend image (gate) | - '-': Not scanned
+Trivy scan - frontend image (gate) | - '0': Clean (no security findings detected)
+Full vulnerability reports (all severities, informational) | for c in backend frontend; do
+Full vulnerability reports (all severities, informational) |   trivy image --skip-db-update --format json -o "trivy-$c-full.json" "${IMAGE_PREFIX}-$c:${GITHUB_SHA}" || true
+Full vulnerability reports (all severities, informational) | done
+Full vulnerability reports (all severities, informational) | {
+Full vulnerability reports (all severities, informational) |   echo "## Trivy image scan (HIGH/CRITICAL, fixable) for \`${GITHUB_SHA::7}\`"
+Full vulnerability reports (all severities, informational) |   for c in backend frontend; do
+Full vulnerability reports (all severities, informational) |     echo "### $c"
+Full vulnerability reports (all severities, informational) |     echo '```'
+Full vulnerability reports (all severities, informational) |     cat "trivy-$c.txt" 2>/dev/null || echo "scan did not run"
+Full vulnerability reports (all severities, informational) |     echo '```'
+Full vulnerability reports (all severities, informational) |   done
+Full vulnerability reports (all severities, informational) | } >> "$GITHUB_STEP_SUMMARY"
+Full vulnerability reports (all severities, informational) | shell: /usr/bin/bash -e {0}
+Full vulnerability reports (all severities, informational) | env:
+Full vulnerability reports (all severities, informational) |   TRIVY_VERSION: 0.75.0
+Full vulnerability reports (all severities, informational) |   TRIVY_SHA256: c6e65abddb348e25f10549df887045629cf28cc72453cd1c63acb717316b3f3f
+Full vulnerability reports (all severities, informational) |   GITLEAKS_VERSION: 8.30.1
+Full vulnerability reports (all severities, informational) |   GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+Full vulnerability reports (all severities, informational) |   TRIVY_DB_REPOSITORY: mirror.gcr.io/aquasec/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2,ghcr.io/aquasecurity/trivy-db:2
+Full vulnerability reports (all severities, informational) |   IMAGE_PREFIX: ghcr.io/pratyushmishra-2nd/pantrypulse
+Push images tagged with the commit SHA | for c in backend frontend; do
+Push images tagged with the commit SHA |   docker push "${IMAGE_PREFIX}-$c:${GITHUB_SHA}"
+Push images tagged with the commit SHA |   digest=$(docker buildx imagetools inspect "${IMAGE_PREFIX}-$c:${GITHUB_SHA}" --format '{{ .Manifest.Digest }}')
+Push images tagged with the commit SHA |   echo "${c}_digest=$digest" >> "$GITHUB_OUTPUT"
+Push images tagged with the commit SHA |   echo "- \`${IMAGE_PREFIX}-$c:${GITHUB_SHA}\` @ \`$digest\`" >> "$GITHUB_STEP_SUMMARY"
+Push images tagged with the commit SHA | done
+Push images tagged with the commit SHA | shell: /usr/bin/bash -e {0}
+Push images tagged with the commit SHA | env:
+Push images tagged with the commit SHA |   TRIVY_VERSION: 0.75.0
+Push images tagged with the commit SHA |   TRIVY_SHA256: c6e65abddb348e25f10549df887045629cf28cc72453cd1c63acb717316b3f3f
+Push images tagged with the commit SHA |   GITLEAKS_VERSION: 8.30.1
+Push images tagged with the commit SHA |   GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+Push images tagged with the commit SHA |   TRIVY_DB_REPOSITORY: mirror.gcr.io/aquasec/trivy-db:2,public.ecr.aws/aquasecurity/trivy-db:2,ghcr.io/aquasecurity/trivy-db:2
+Push images tagged with the commit SHA |   IMAGE_PREFIX: ghcr.io/pratyushmishra-2nd/pantrypulse
+Push images tagged with the commit SHA | The push refers to repository [ghcr.io/pratyushmishra-2nd/pantrypulse-backend]
+Push images tagged with the commit SHA | 773d4893ec90: Preparing
+Push images tagged with the commit SHA | b430d0fca5da: Preparing
+Push images tagged with the commit SHA | 4513ea68e53c: Preparing
+Push images tagged with the commit SHA | 0c43ac2b91bc: Preparing
+Push images tagged with the commit SHA | a84e8b5ccab8: Preparing
+Push images tagged with the commit SHA | af16d4892134: Preparing
+Push images tagged with the commit SHA | 2f769aad972a: Preparing
+Push images tagged with the commit SHA | dca2a125b490: Preparing
+Push images tagged with the commit SHA | b361fa3b9794: Preparing
+Push images tagged with the commit SHA | e1fa2746ad6d: Preparing
+Push images tagged with the commit SHA | 15f1c8eb1ab1: Preparing
+Push images tagged with the commit SHA | af16d4892134: Waiting
+Push images tagged with the commit SHA | b361fa3b9794: Waiting
+Push images tagged with the commit SHA | e1fa2746ad6d: Waiting
+Push images tagged with the commit SHA | 15f1c8eb1ab1: Waiting
+Push images tagged with the commit SHA | 2f769aad972a: Waiting
+Push images tagged with the commit SHA | dca2a125b490: Waiting
+Push images tagged with the commit SHA | 773d4893ec90: Pushed
+Push images tagged with the commit SHA | b430d0fca5da: Pushed
+Push images tagged with the commit SHA | 0c43ac2b91bc: Pushed
+Push images tagged with the commit SHA | 4513ea68e53c: Pushed
+Push images tagged with the commit SHA | dca2a125b490: Pushed
+Push images tagged with the commit SHA | af16d4892134: Pushed
+Push images tagged with the commit SHA | 2f769aad972a: Pushed
+Push images tagged with the commit SHA | e1fa2746ad6d: Pushed
+Push images tagged with the commit SHA | b361fa3b9794: Pushed
+Push images tagged with the commit SHA | a84e8b5ccab8: Pushed
+Push images tagged with the commit SHA | 15f1c8eb1ab1: Pushed
+Push images tagged with the commit SHA | 8be415d7e29164a997390aad36d32623c3548548: digest: sha256:3e50710b8dfdf4b10fe2cbc6c90b37ce6e7780081ef642c6eca43250d92da624 size: 2619
+Push images tagged with the commit SHA | The push refers to repository [ghcr.io/pratyushmishra-2nd/pantrypulse-frontend]
+Push images tagged with the commit SHA | 37b782fd886c: Preparing
+Push images tagged with the commit SHA | abc1ca7f858c: Preparing
+Push images tagged with the commit SHA | 10a6a0362e3d: Preparing
+Push images tagged with the commit SHA | 049faeb62ee0: Preparing
+Push images tagged with the commit SHA | 0d53eba7f7b1: Preparing
+Push images tagged with the commit SHA | b53268e3e841: Preparing
+Push images tagged with the commit SHA | 8632be6b207b: Preparing
+Push images tagged with the commit SHA | ef2d57c4733b: Preparing
+Push images tagged with the commit SHA | f4bb89e37787: Preparing
+Push images tagged with the commit SHA | d95f58cfc01b: Preparing
+Push images tagged with the commit SHA | 2e8009e0b40f: Preparing
+Push images tagged with the commit SHA | 74d97c428c51: Preparing
+Push images tagged with the commit SHA | b53268e3e841: Waiting
+Push images tagged with the commit SHA | 8632be6b207b: Waiting
+Push images tagged with the commit SHA | ef2d57c4733b: Waiting
+Push images tagged with the commit SHA | f4bb89e37787: Waiting
+Push images tagged with the commit SHA | d95f58cfc01b: Waiting
+Push images tagged with the commit SHA | 2e8009e0b40f: Waiting
+Push images tagged with the commit SHA | 74d97c428c51: Waiting
+Push images tagged with the commit SHA | 0d53eba7f7b1: Pushed
+Push images tagged with the commit SHA | 10a6a0362e3d: Pushed
+Push images tagged with the commit SHA | abc1ca7f858c: Pushed
+Push images tagged with the commit SHA | 37b782fd886c: Pushed
+Push images tagged with the commit SHA | b53268e3e841: Pushed
+Push images tagged with the commit SHA | 8632be6b207b: Pushed
+Push images tagged with the commit SHA | ef2d57c4733b: Pushed
+Push images tagged with the commit SHA | 049faeb62ee0: Pushed
+Push images tagged with the commit SHA | f4bb89e37787: Pushed
+Push images tagged with the commit SHA | 74d97c428c51: Layer already exists
+Push images tagged with the commit SHA | d95f58cfc01b: Pushed
+Push images tagged with the commit SHA | 2e8009e0b40f: Pushed
+Push images tagged with the commit SHA | 8be415d7e29164a997390aad36d32623c3548548: digest: sha256:47c17ce4006bbd5a9514ed319bb32b36ee3a07bd3b7bfa054ff844365184cd2f size: 2824
+

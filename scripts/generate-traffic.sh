@@ -3,6 +3,8 @@
 # reads, creates, dispatches, the odd validation error (422) and missing
 # record (404).
 #   scripts/generate-traffic.sh [base_url] [iterations]
+# The "Traffic test rice" lots it creates can be removed afterwards, see
+# docs/evidence/transcripts/traffic-cleanup.txt.
 set -uo pipefail
 BASE="${1:-http://pantrypulse.127.0.0.1.nip.io:8088}"
 N="${2:-200}"

@@ -1,0 +1,73 @@
+# recorded 2026-10-13 01:14:18 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ cd backend && .venv/Scripts/python -m pytest -v --cov=app --cov-report=term 2>&1 | sed 's/\r//'
+============================= test session starts =============================
+platform win32 -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0 -- C:\Codeing\Github\DevopsProject\backend\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Codeing\Github\DevopsProject\backend
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.15.1, platformdirs-4.13.0, cov-7.1.0
+collecting ... collected 35 items
+
+tests/test_dispatches.py::test_dispatch_reduces_lot_quantity PASSED      [  2%]
+tests/test_dispatches.py::test_dispatch_entire_lot_marks_it_depleted PASSED [  5%]
+tests/test_dispatches.py::test_dispatch_more_than_available_is_rejected PASSED [  8%]
+tests/test_dispatches.py::test_dispatch_from_expired_lot_is_blocked PASSED [ 11%]
+tests/test_dispatches.py::test_dispatch_from_lot_on_hold_is_blocked PASSED [ 14%]
+tests/test_dispatches.py::test_dispatch_for_missing_lot_returns_404 PASSED [ 17%]
+tests/test_dispatches.py::test_lot_with_dispatch_history_cannot_be_deleted PASSED [ 20%]
+tests/test_dispatches.py::test_void_dispatch_restores_quantity PASSED    [ 22%]
+tests/test_donors.py::test_create_and_list_donors PASSED                 [ 25%]
+tests/test_donors.py::test_duplicate_donor_name_returns_409 PASSED       [ 28%]
+tests/test_donors.py::test_donor_validation PASSED                       [ 31%]
+tests/test_donors.py::test_update_donor PASSED                           [ 34%]
+tests/test_donors.py::test_get_missing_donor_returns_404 PASSED          [ 37%]
+tests/test_donors.py::test_delete_donor_keeps_lots PASSED                [ 40%]
+tests/test_lots.py::test_create_lot_returns_201_and_computes_freshness PASSED [ 42%]
+tests/test_lots.py::test_list_lots_orders_by_expiry_and_filters PASSED   [ 45%]
+tests/test_lots.py::test_get_lot_by_id PASSED                            [ 48%]
+tests/test_lots.py::test_get_missing_lot_returns_404 PASSED              [ 51%]
+tests/test_lots.py::test_create_lot_rejects_invalid_payload PASSED       [ 54%]
+tests/test_lots.py::test_create_lot_rejects_expiry_before_receipt PASSED [ 57%]
+tests/test_lots.py::test_create_lot_rejects_unknown_donor PASSED         [ 60%]
+tests/test_lots.py::test_update_lot_changes_only_sent_fields PASSED      [ 62%]
+tests/test_lots.py::test_update_lot_to_zero_marks_depleted PASSED        [ 65%]
+tests/test_lots.py::test_update_missing_lot_returns_404 PASSED           [ 68%]
+tests/test_lots.py::test_update_lot_rejects_null_required_field PASSED   [ 71%]
+tests/test_lots.py::test_delete_lot PASSED                               [ 74%]
+tests/test_lots.py::test_delete_missing_lot_returns_404 PASSED           [ 77%]
+tests/test_lots.py::test_summary_counts_expiring_and_expired PASSED      [ 80%]
+tests/test_postgres.py::test_migrations_create_expected_tables SKIPPED   [ 82%]
+tests/test_postgres.py::test_ready_and_crud_on_postgres SKIPPED (TES...) [ 85%]
+tests/test_system.py::test_health_is_up PASSED                           [ 88%]
+tests/test_system.py::test_ready_checks_database PASSED                  [ 91%]
+tests/test_system.py::test_ready_reports_unmigrated_schema PASSED        [ 94%]
+tests/test_system.py::test_metrics_exposes_prometheus_format PASSED      [ 97%]
+tests/test_system.py::test_info_reports_git_sha PASSED                   [100%]
+
+=============================== tests coverage ================================
+______________ coverage: platform win32, python 3.12.13-final-0 _______________
+
+Name                        Stmts   Miss  Cover
+-----------------------------------------------
+app\__init__.py                 0      0   100%
+app\config.py                  18      0   100%
+app\db.py                      13      4    69%
+app\logging_config.py          21      7    67%
+app\main.py                    27      1    96%
+app\metrics.py                  3      0   100%
+app\models.py                  43      0   100%
+app\routers\__init__.py         0      0   100%
+app\routers\dispatches.py      49      2    96%
+app\routers\donors.py          54      1    98%
+app\routers\lots.py            97      4    96%
+app\routers\system.py          30      4    87%
+app\schemas.py                146      3    98%
+app\seed.py                    33     33     0%
+-----------------------------------------------
+TOTAL                         534     59    89%
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_postgres.py:51: TEST_POSTGRES_URL not set
+SKIPPED [1] tests\test_postgres.py:59: TEST_POSTGRES_URL not set
+======================== 33 passed, 2 skipped in 1.21s ========================
+

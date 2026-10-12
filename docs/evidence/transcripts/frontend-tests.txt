@@ -1,0 +1,12 @@
+# recorded 2026-10-13 01:14:29 IST
+pratyush-mishra@pantrypulse:~/DevopsProject$ cd frontend && npx vitest run 2>&1
+
+ RUN  v5.0.4 C:/Codeing/Github/DevopsProject/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  15 passed (15)
+   Start at  01:14:31
+   Duration  18.63s (environment 78%, setup 20%, tests 1%, import 1%)
+
+
