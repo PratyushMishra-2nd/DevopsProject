@@ -11,7 +11,7 @@
 #
 # Nothing is pushed unless every gate passes; pull requests run the gates and
 # the image build/scan but never publish. GitOps promotion to the demo cluster
-# is a separate, reviewed commit to gitops/values.yaml (see docs/engineering/gitops.md).
+# is a separate, reviewed commit to gitops/values-local.yaml (see docs/engineering/gitops.md).
 
 name: CI/CD
 
