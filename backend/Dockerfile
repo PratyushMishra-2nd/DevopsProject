@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 # ---- build stage: resolve wheels into an isolated virtualenv ----
-FROM python:3.12-slim-trixie AS build
+FROM python:3.14-slim-trixie AS build
 ENV PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1
 RUN python -m venv /opt/venv
 ENV PATH=/opt/venv/bin:$PATH
@@ -9,7 +9,7 @@ RUN pip install --upgrade pip && pip install -r requirements.txt \
  && pip uninstall -y pip
 
 # ---- runtime stage: no compilers, no pip, non-root ----
-FROM python:3.12-slim-trixie AS runtime
+FROM python:3.14-slim-trixie AS runtime
 ARG GIT_SHA=unknown
 LABEL org.opencontainers.image.title="pantrypulse-backend" \
       org.opencontainers.image.description="PantryPulse FastAPI service" \
