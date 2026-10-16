@@ -1,0 +1,27 @@
+#!/bin/bash
+# Boot script: adds swap, then installs a pinned k3s release. Bundled
+# components used: Traefik (ingress class "traefik", published on :80 by
+# ServiceLB), local-path storage (PostgreSQL PVC) and metrics-server (HPAs).
+set -euxo pipefail
+
+# A t3.micro has 1 GiB of RAM; swap keeps k3s plus the app from being
+# OOM-killed. The kubelet must be told to tolerate it.
+if [ ! -f /swapfile ]; then
+  fallocate -l ${swap_gb}G /swapfile
+  chmod 600 /swapfile
+  mkswap /swapfile
+  echo '/swapfile none swap sw 0 0' >> /etc/fstab
+fi
+swapon -a
+
+TOKEN=$(curl -sS -X PUT http://169.254.169.254/latest/api/token -H "X-aws-ec2-metadata-token-ttl-seconds: 300")
+PUBLIC_IP=$(curl -sS -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-ipv4)
+
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="${k3s_version}" sh -s - server \
+  --tls-san "$PUBLIC_IP" \
+  --write-kubeconfig-mode 0600 \
+  --secrets-encryption \
+  --kubelet-arg=fail-swap-on=false
+
+until /usr/local/bin/kubectl get nodes 2>/dev/null | grep -q " Ready"; do sleep 5; done
+touch /var/lib/pantrypulse-k3s-ready

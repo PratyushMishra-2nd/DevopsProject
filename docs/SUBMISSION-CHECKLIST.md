@@ -70,7 +70,7 @@ Deadline: **Sunday 19 October 2026, 11:59 PM IST**.
 | `terraform/` with valid HCL | Done | [m7-terraform-validate](evidence/screenshots/m7-terraform-validate.png) |
 | `terraform init` | Done | [m7-terraform-init](evidence/screenshots/m7-terraform-init.png) |
 | `terraform plan` output | Done: offline plan, 29 to add, no AWS calls | [m7-terraform-plan](evidence/screenshots/m7-terraform-plan.png) |
-| VPC (≥ 2 public subnets) + EKS (node group) provisioned, AWS Console screenshot | **PENDING EXTERNAL ACCESS**: code complete, not applied (no valid AWS credentials) | [runbook](runbooks/aws-eks.md), [ADR 0007](adr/0007-local-kind-as-the-demo-cluster.md) |
+| VPC (≥ 2 public subnets) + EKS (node group) provisioned, AWS Console screenshot | **PENDING EXTERNAL ACCESS**: code complete, not applied (no valid AWS credentials) | [runbook](runbooks/aws-eks.md), [ADR 0007](adr/0007-local-kind-as-the-demo-cluster.md); free-tier EC2 + k3s alternative: [runbook](runbooks/aws-ec2-k3s.md), [ADR 0008](adr/0008-free-tier-ec2-k3s.md) |
 | `terraform destroy` output | **PENDING EXTERNAL ACCESS** | [runbook § Destroy](runbooks/aws-eks.md#5-destroy-do-not-skip) |
 | `terraform.tfvars.example`, no real credentials | Done | `terraform/terraform.tfvars.example` |
 
@@ -110,8 +110,9 @@ The cluster is local kind; EKS is pending (see above).
 1. **Submit the form.** Submit the repository URL through the course form
    (https://forms.gle/XWAP1vAumDJgAPM1A). This was deliberately not
    submitted for you.
-2. **AWS, optional.** If AWS access becomes available, follow
-   [docs/runbooks/aws-eks.md](runbooks/aws-eks.md). It covers apply, the
+2. **AWS, optional.** For a free-tier deployment follow
+   [docs/runbooks/aws-ec2-k3s.md](runbooks/aws-ec2-k3s.md); for EKS (paid,
+   ~US$0.22/h) follow [docs/runbooks/aws-eks.md](runbooks/aws-eks.md). It covers apply, the
    Console screenshots, deploy, and destroy. Add the screenshots to
    `docs/evidence/screenshots/` as `m7-aws-*.png`.
 3. **Video narration.** `demo/presentation.mp4` is narrated with the

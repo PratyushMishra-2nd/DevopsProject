@@ -44,6 +44,10 @@ Around that application sits the full delivery platform:
 >   comes from real runs.
 > - See [ADR 0007](docs/adr/0007-local-kind-as-the-demo-cluster.md) and
 >   the [EKS runbook](docs/runbooks/aws-eks.md).
+> - **Free-tier alternative:** `terraform/ec2-k3s/` runs the same chart and
+>   images on one `t3.micro` with k3s, verified with a real `terraform plan`
+>   (15 resources). See [ADR 0008](docs/adr/0008-free-tier-ec2-k3s.md) and
+>   the [EC2 + k3s runbook](docs/runbooks/aws-ec2-k3s.md).
 
 ---
 
@@ -340,7 +344,9 @@ Verified without an AWS account:
 
 **Not yet done:** `terraform apply`, the AWS Console screenshots and
 `terraform destroy`. These are pending AWS access; the exact procedure is in
-[docs/runbooks/aws-eks.md](docs/runbooks/aws-eks.md).
+[docs/runbooks/aws-eks.md](docs/runbooks/aws-eks.md). A free-tier
+alternative (one `t3.micro` running k3s) is in `terraform/ec2-k3s/`; see
+[docs/runbooks/aws-ec2-k3s.md](docs/runbooks/aws-ec2-k3s.md).
 
 ## Kubernetes and Helm
 
@@ -459,9 +465,9 @@ demo/              presentation video, slides (PPTX/PDF), preview GIF, demo scri
 
 | Area | Documents |
 |------|-----------|
-| Decisions | [ADR 0001 stack](docs/adr/0001-application-stack.md), [0002 SHA tags + Trivy gate](docs/adr/0002-immutable-sha-image-tags.md), [0003 EKS without NAT](docs/adr/0003-eks-without-nat.md), [0004 Traefik](docs/adr/0004-traefik-ingress-controller.md), [0005 Argo CD](docs/adr/0005-gitops-with-argo-cd.md), [0006 migrations Job](docs/adr/0006-migrations-as-a-job.md), [0007 kind vs EKS](docs/adr/0007-local-kind-as-the-demo-cluster.md) |
+| Decisions | [ADR 0001 stack](docs/adr/0001-application-stack.md), [0002 SHA tags + Trivy gate](docs/adr/0002-immutable-sha-image-tags.md), [0003 EKS without NAT](docs/adr/0003-eks-without-nat.md), [0004 Traefik](docs/adr/0004-traefik-ingress-controller.md), [0005 Argo CD](docs/adr/0005-gitops-with-argo-cd.md), [0006 migrations Job](docs/adr/0006-migrations-as-a-job.md), [0007 kind vs EKS](docs/adr/0007-local-kind-as-the-demo-cluster.md), [0008 free-tier EC2 + k3s](docs/adr/0008-free-tier-ec2-k3s.md) |
 | Engineering | [CI/CD](docs/engineering/ci-cd.md), [security](docs/engineering/security.md), [GitOps](docs/engineering/gitops.md), [observability](docs/engineering/observability.md) |
-| Runbooks | [local development](docs/runbooks/local-development.md), [kind platform](docs/runbooks/kind-platform.md), [AWS EKS](docs/runbooks/aws-eks.md), [rollback](docs/runbooks/rollback.md) |
+| Runbooks | [local development](docs/runbooks/local-development.md), [kind platform](docs/runbooks/kind-platform.md), [AWS EKS](docs/runbooks/aws-eks.md), [AWS EC2 + k3s (free tier)](docs/runbooks/aws-ec2-k3s.md), [rollback](docs/runbooks/rollback.md) |
 | Evidence | [manifest](docs/evidence/EVIDENCE-MANIFEST.md), [submission checklist](docs/SUBMISSION-CHECKLIST.md), [transcripts](docs/evidence/transcripts/), [screenshots](docs/evidence/screenshots/) |
 | Demo | [demo script](demo/DEMO-SCRIPT.md), video and slides in [`demo/`](demo/) |
 

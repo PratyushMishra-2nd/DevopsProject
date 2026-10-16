@@ -30,6 +30,11 @@ misconfigurations:
     statement: >-
       VPC flow logs are not enabled for the demo VPC; it carries no production
       traffic and is destroyed after the walkthrough.
+  - id: AWS-0104
+    statement: >-
+      Free-tier k3s node (terraform/ec2-k3s): outbound is limited to TCP 80/443
+      so it can reach apt mirrors, get.k3s.io and ghcr.io, whose addresses are
+      not stable enough to list. Inbound stays restricted to admin_cidrs.
   - id: KSV-0125
     statement: >-
       Trivy's default trusted-registry list does not include ghcr.io; our

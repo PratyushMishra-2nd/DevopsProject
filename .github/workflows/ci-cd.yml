@@ -164,10 +164,16 @@ jobs:
           terraform -chdir=terraform init -backend=false -input=false
           terraform -chdir=terraform validate
           terraform -chdir=terraform test
+      - name: terraform init, validate and offline tests (free-tier EC2 + k3s stack)
+        run: |
+          terraform -chdir=terraform/ec2-k3s init -backend=false -input=false
+          terraform -chdir=terraform/ec2-k3s validate
+          terraform -chdir=terraform/ec2-k3s test
       - name: Helm lint and render
         run: |
           set -- --set backend.image.tag=ci --set frontend.image.tag=ci --set postgres.auth.password=ci
           helm lint helm/pantrypulse -f helm/pantrypulse/values-dev.yaml "$@"
+          helm lint helm/pantrypulse -f helm/pantrypulse/values-ec2.yaml "$@"
           mkdir -p rendered
           helm template pantrypulse helm/pantrypulse -n pantrypulse -f helm/pantrypulse/values-dev.yaml "$@" > rendered/pantrypulse.yaml
           cp k8s/*.yaml rendered/
