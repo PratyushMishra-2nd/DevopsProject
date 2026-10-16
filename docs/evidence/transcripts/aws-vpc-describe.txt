@@ -1,0 +1,19 @@
+$ aws sts get-caller-identity --query Arn
+arn:aws:iam::189393508581:user/pratyush-mishra
+
+$ aws ec2 describe-vpcs --region ap-south-1 --vpc-ids vpc-0b1c862303e356dbc
+---------------------------------------------------------------------------
+|                              DescribeVpcs                               |
++------------------------+---------------+------------+-------------------+
+|  vpc-0b1c862303e356dbc |  10.42.0.0/16 |  available |  pantrypulse-vpc  |
++------------------------+---------------+------------+-------------------+
+
+$ aws ec2 describe-subnets --region ap-south-1 --filters Name=vpc-id,Values=vpc-0b1c862303e356dbc
+-----------------------------------------------------------------------------------------------------------
+|                                             DescribeSubnets                                             |
++----------------------------------+----------------------------+-----------------+--------------+--------+
+|  pantrypulse-public-ap-south-1a  |  subnet-09fc7e0c75f68d2ff  |  10.42.0.0/20   |  ap-south-1a |  True  |
+|  pantrypulse-private-ap-south-1a |  subnet-059ad57f3fcab5590  |  10.42.128.0/20 |  ap-south-1a |  False |
+|  pantrypulse-private-ap-south-1b |  subnet-0006b822e6f957c0a  |  10.42.144.0/20 |  ap-south-1b |  False |
+|  pantrypulse-public-ap-south-1b  |  subnet-065eeccab6ddfed1f  |  10.42.16.0/20  |  ap-south-1b |  True  |
++----------------------------------+----------------------------+-----------------+--------------+--------+

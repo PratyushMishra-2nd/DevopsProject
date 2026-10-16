@@ -1,10 +1,12 @@
 # Runbook: provision, deploy and destroy on AWS EKS
 
-> **Status: PENDING EXTERNAL ACCESS.** This runbook has **not** been run
-> against AWS for this submission: no valid AWS credentials were available
-> (`aws sts get-caller-identity` → `InvalidClientTokenId`). Everything
-> below is verified only up to `terraform plan` without an account. See
-> [ADR 0007](../adr/0007-local-kind-as-the-demo-cluster.md).
+> **Status (2026-10-16):** the network part (VPC, 2 public + 2 private
+> subnets, IGW, route tables) was applied to AWS with `-target` and then
+> destroyed. The EKS part has **not** been run: the AWS IAM user available
+> for this project has no `eks:*` permissions and its guardrail policy only
+> allows `t2.micro`/`t3.micro` instances. See
+> [ADR 0007](../adr/0007-local-kind-as-the-demo-cluster.md) and
+> [ADR 0008](../adr/0008-free-tier-ec2-k3s.md).
 
 ## What Terraform creates
 

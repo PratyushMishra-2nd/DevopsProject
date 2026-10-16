@@ -76,7 +76,11 @@ Two notes on hosts and ports:
 |----------|-------|
 | `screenshots/m7-terraform-init.png`, `m7-terraform-validate.png`, `m7-terraform-test.png` | init / fmt + validate / `terraform test` (4 passed) |
 | `screenshots/m7-terraform-plan.png` ← `transcripts/terraform-plan-offline.txt` | `Plan: 29 to add`, generated **without** AWS access (`offline_plan=true` and dummy credentials; nothing calls AWS) |
-| **Not available** | AWS Console screenshots, `terraform apply`, `terraform destroy`: **PENDING EXTERNAL ACCESS** (see [ADR 0007](../adr/0007-local-kind-as-the-demo-cluster.md)) |
+| `screenshots/m7-aws-vpc-apply.png` ← `transcripts/aws-vpc-apply.txt` | Real `terraform apply` on AWS ap-south-1 (2026-10-16) of the network resources in `terraform/` (`-target`): `Apply complete! Resources: 13 added` |
+| `screenshots/m7-aws-vpc-subnets.png` ← `transcripts/aws-vpc-describe.txt` | AWS CLI: caller identity, `pantrypulse-vpc` (10.42.0.0/16, available) and its 2 public + 2 private subnets in ap-south-1a/1b |
+| `screenshots/m7-terraform-destroy.png` ← `transcripts/aws-vpc-destroy.txt` | `Destroy complete! Resources: 13 destroyed`, then no `Project=pantrypulse` VPCs or instances left |
+| `transcripts/aws-ec2-k3s-apply.txt` | State and outputs of the free-tier EC2 + k3s stack (15 resources) applied the same day; destroyed after the app could not start on a CPU-credit-starved t3.micro ([ADR 0008](../adr/0008-free-tier-ec2-k3s.md)) |
+| **Not available** | EKS cluster and node group: the AWS IAM user has no EKS permissions. AWS Console screenshots: the evidence above is AWS CLI output |
 
 ### M8 Kubernetes, Helm, GitOps
 

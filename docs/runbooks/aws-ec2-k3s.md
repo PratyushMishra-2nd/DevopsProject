@@ -1,9 +1,11 @@
 # Runbook: free-tier AWS deployment (EC2 + k3s)
 
-> **Status: code complete, verified up to a real `terraform plan`
-> (15 resources) against the AWS account. Not yet applied.**
+> **Status: applied once on 2026-10-16 and destroyed.** The node came up
+> (`Ready`, k3s v1.35.9+k3s1), but the Helm install timed out: the new
+> t3.micro had a CPU credit balance of 0 (55-60 % steal) and 1 GiB of RAM,
+> so the app pods never became ready.
 > See [ADR 0008](../adr/0008-free-tier-ec2-k3s.md) for why this exists next to
-> the [EKS runbook](aws-eks.md).
+> the [EKS runbook](aws-eks.md), and for the outcome.
 
 ## What Terraform creates
 

@@ -4,7 +4,9 @@ This is the instructor's checklist from `GRADING.md`, mapped to this
 repository. Status values:
 
 - **Done**: verified with the linked evidence.
-- **PENDING EXTERNAL ACCESS**: needs an AWS account that was not available.
+- **BLOCKED (AWS account)**: the AWS IAM user available for this project has
+  no EKS permissions (`eks:ListClusters` → `AccessDeniedException`), so the
+  EKS cluster cannot be created from it.
 - **Owner action**: only the repository owner can do it.
 
 Deadline: **Sunday 19 October 2026, 11:59 PM IST**.
@@ -70,8 +72,10 @@ Deadline: **Sunday 19 October 2026, 11:59 PM IST**.
 | `terraform/` with valid HCL | Done | [m7-terraform-validate](evidence/screenshots/m7-terraform-validate.png) |
 | `terraform init` | Done | [m7-terraform-init](evidence/screenshots/m7-terraform-init.png) |
 | `terraform plan` output | Done: offline plan, 29 to add, no AWS calls | [m7-terraform-plan](evidence/screenshots/m7-terraform-plan.png) |
-| VPC (≥ 2 public subnets) + EKS (node group) provisioned, AWS Console screenshot | **PENDING EXTERNAL ACCESS**: code complete, not applied (no valid AWS credentials) | [runbook](runbooks/aws-eks.md), [ADR 0007](adr/0007-local-kind-as-the-demo-cluster.md); free-tier EC2 + k3s alternative: [runbook](runbooks/aws-ec2-k3s.md), [ADR 0008](adr/0008-free-tier-ec2-k3s.md) |
-| `terraform destroy` output | **PENDING EXTERNAL ACCESS** | [runbook § Destroy](runbooks/aws-eks.md#5-destroy-do-not-skip) |
+| VPC with ≥ 2 public subnets provisioned | Done on AWS 2026-10-16: `terraform apply` of the network resources in `terraform/` (13 added): `pantrypulse-vpc` 10.42.0.0/16, public subnets in ap-south-1a/1b, private subnets in 1a/1b | [m7-aws-vpc-apply](evidence/screenshots/m7-aws-vpc-apply.png), [m7-aws-vpc-subnets](evidence/screenshots/m7-aws-vpc-subnets.png) (AWS CLI) |
+| EKS cluster + node group provisioned | **BLOCKED (AWS account)**: code complete and planned (29 resources); the IAM user has no `eks:*` permissions and its guardrail policy denies `t3.medium` | [runbook](runbooks/aws-eks.md), [ADR 0008](adr/0008-free-tier-ec2-k3s.md) |
+| AWS Console screenshot | **Owner action (optional)**: the evidence above is AWS CLI output; a Console screenshot needs a browser login | — |
+| `terraform destroy` output | Done on AWS 2026-10-16: 13 destroyed, then no `Project=pantrypulse` VPCs or instances left | [m7-terraform-destroy](evidence/screenshots/m7-terraform-destroy.png) |
 | `terraform.tfvars.example`, no real credentials | Done | `terraform/terraform.tfvars.example` |
 
 ## Kubernetes and Helm

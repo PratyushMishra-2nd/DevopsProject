@@ -41,3 +41,17 @@ The EKS stack stays in `terraform/` as the production-shaped design.
 - The same CI gates run on both stacks (`terraform fmt`, `validate`,
   `test`, Trivy IaC). Accepted Trivy finding AWS-0104 (outbound TCP 80/443
   to any address) is documented in `security/trivy-iac-accepted.yaml`.
+
+## Outcome (2026-10-16)
+
+- The stack was applied (15 resources) and k3s reached `Ready`, but
+  `scripts/deploy-ec2.sh` timed out after 10 minutes: CloudWatch showed a
+  `CPUCreditBalance` of 0 and the node ran at 55-60 % CPU steal with 500+ MB
+  in swap. Running the app would have required unlimited CPU credits (paid),
+  so the stack was destroyed instead.
+- The account also has **no EKS permissions at all**
+  (`eks:ListClusters` → `AccessDeniedException`), so the EKS stack cannot be
+  applied from it regardless of instance type.
+- What *was* proven on AWS: the network part of `terraform/` (VPC with 2
+  public and 2 private subnets) was applied with `-target` and destroyed;
+  see `docs/evidence/transcripts/aws-vpc-*.txt`.

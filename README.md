@@ -35,19 +35,17 @@ Around that application sits the full delivery platform:
 
 ![PantryPulse demo preview: slides, the app through the Ingress, CI, Argo CD, Prometheus and Grafana](demo/preview.gif)
 
-> **AWS status: PENDING EXTERNAL ACCESS.**
-> - The Terraform for VPC + EKS is complete and verified with
->   `init`, `validate`, `test` and an offline `plan` (29 resources).
-> - It has **not** been applied: no valid AWS credentials were available
->   while this was built.
-> - Everything else runs on a local kind cluster, and all of the evidence
->   comes from real runs.
-> - See [ADR 0007](docs/adr/0007-local-kind-as-the-demo-cluster.md) and
->   the [EKS runbook](docs/runbooks/aws-eks.md).
-> - **Free-tier alternative:** `terraform/ec2-k3s/` runs the same chart and
->   images on one `t3.micro` with k3s, verified with a real `terraform plan`
->   (15 resources). See [ADR 0008](docs/adr/0008-free-tier-ec2-k3s.md) and
->   the [EC2 + k3s runbook](docs/runbooks/aws-ec2-k3s.md).
+> **AWS status (2026-10-16):**
+> - The VPC from `terraform/` (2 public + 2 private subnets) was applied to
+>   AWS `ap-south-1` and then destroyed; see the M7 evidence.
+> - The EKS cluster is complete as code and planned (29 resources) but
+>   **could not be created**: the AWS IAM user available for this project has
+>   no EKS permissions and its guardrail policy denies `t3.medium`.
+> - Kubernetes, Helm, Argo CD and monitoring therefore run on a local kind
+>   cluster; all of the evidence comes from real runs.
+> - See [ADR 0007](docs/adr/0007-local-kind-as-the-demo-cluster.md),
+>   [ADR 0008](docs/adr/0008-free-tier-ec2-k3s.md) and the
+>   [EKS runbook](docs/runbooks/aws-eks.md).
 
 ---
 
@@ -342,11 +340,18 @@ Verified without an AWS account:
 
 [Screenshot](docs/evidence/screenshots/m7-terraform-plan.png).
 
-**Not yet done:** `terraform apply`, the AWS Console screenshots and
-`terraform destroy`. These are pending AWS access; the exact procedure is in
-[docs/runbooks/aws-eks.md](docs/runbooks/aws-eks.md). A free-tier
-alternative (one `t3.micro` running k3s) is in `terraform/ec2-k3s/`; see
-[docs/runbooks/aws-ec2-k3s.md](docs/runbooks/aws-ec2-k3s.md).
+**Applied on AWS (2026-10-16):** the network resources of `terraform/`
+(VPC, 2 public + 2 private subnets, internet gateway, route tables:
+13 resources) were applied in `ap-south-1` and then destroyed:
+[apply](docs/evidence/screenshots/m7-aws-vpc-apply.png),
+[VPC and subnets](docs/evidence/screenshots/m7-aws-vpc-subnets.png),
+[destroy](docs/evidence/screenshots/m7-terraform-destroy.png).
+
+**Not done:** the EKS cluster and node group. The AWS IAM user available
+for this project has no EKS permissions and is limited to `t2/t3.micro`
+instances, so the procedure in [docs/runbooks/aws-eks.md](docs/runbooks/aws-eks.md)
+cannot be run from it. A free-tier alternative (one `t3.micro` running k3s)
+is in `terraform/ec2-k3s/`; see [ADR 0008](docs/adr/0008-free-tier-ec2-k3s.md).
 
 ## Kubernetes and Helm
 
