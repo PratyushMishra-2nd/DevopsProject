@@ -69,12 +69,32 @@ resource "aws_eks_node_group" "main" {
     ignore_changes = [scaling_config[0].desired_size]
   }
 
-  depends_on = [aws_iam_role_policy_attachment.node]
+  depends_on = [
+    aws_iam_role_policy_attachment.node,
+    aws_eks_addon.vpc_cni,
+  ]
 }
 
-# Core add-ons managed by EKS. vpc-cni must exist before nodes can be Ready.
+# vpc-cni is configured before the node group exists: with prefix delegation
+# each ENI slot hands out a /28, so small nodes (t3.micro: 4 pods by ENI
+# count) can run the system pods, and managed node groups size max-pods to match.
+resource "aws_eks_addon" "vpc_cni" {
+  cluster_name                = aws_eks_cluster.main.name
+  addon_name                  = "vpc-cni"
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "OVERWRITE"
+
+  configuration_values = jsonencode({
+    env = {
+      ENABLE_PREFIX_DELEGATION = "true"
+      WARM_PREFIX_TARGET       = "1"
+    }
+  })
+}
+
+# The remaining core add-ons need nodes to schedule onto.
 resource "aws_eks_addon" "core" {
-  for_each = toset(["vpc-cni", "kube-proxy", "coredns", "eks-pod-identity-agent", "metrics-server"])
+  for_each = toset(["kube-proxy", "coredns", "eks-pod-identity-agent", "metrics-server"])
 
   cluster_name                = aws_eks_cluster.main.name
   addon_name                  = each.value

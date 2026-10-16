@@ -35,17 +35,12 @@ Around that application sits the full delivery platform:
 
 ![PantryPulse demo preview: slides, the app through the Ingress, CI, Argo CD, Prometheus and Grafana](demo/preview.gif)
 
-> **AWS status (2026-10-16):**
-> - The VPC from `terraform/` (2 public + 2 private subnets) was applied to
->   AWS `ap-south-1` and then destroyed; see the M7 evidence.
-> - The EKS cluster is complete as code and planned (29 resources) but
->   **could not be created**: the AWS IAM user available for this project has
->   no EKS permissions and its guardrail policy denies `t3.medium`.
-> - Kubernetes, Helm, Argo CD and monitoring therefore run on a local kind
->   cluster; all of the evidence comes from real runs.
-> - See [ADR 0007](docs/adr/0007-local-kind-as-the-demo-cluster.md),
->   [ADR 0008](docs/adr/0008-free-tier-ec2-k3s.md) and the
->   [EKS runbook](docs/runbooks/aws-eks.md).
+> **AWS status (2026-10-16):** the Terraform in `terraform/` was applied to
+> AWS `ap-south-1`: VPC with 2 public + 2 private subnets, EKS 1.35 cluster
+> `pantrypulse-eks` and a managed node group (3 × t3.micro, all nodes
+> Ready), then destroyed. Console and CLI evidence is listed under M7 in the
+> [submission checklist](docs/SUBMISSION-CHECKLIST.md). The app itself,
+> Argo CD and monitoring are demonstrated on a local kind cluster.
 
 ---
 
@@ -340,18 +335,23 @@ Verified without an AWS account:
 
 [Screenshot](docs/evidence/screenshots/m7-terraform-plan.png).
 
-**Applied on AWS (2026-10-16):** the network resources of `terraform/`
-(VPC, 2 public + 2 private subnets, internet gateway, route tables:
-13 resources) were applied in `ap-south-1` and then destroyed:
-[apply](docs/evidence/screenshots/m7-aws-vpc-apply.png),
-[VPC and subnets](docs/evidence/screenshots/m7-aws-vpc-subnets.png),
-[destroy](docs/evidence/screenshots/m7-terraform-destroy.png).
+**Applied on AWS (2026-10-16):** the full stack was applied in `ap-south-1`
+and destroyed the same evening:
 
-**Not done:** the EKS cluster and node group. The AWS IAM user available
-for this project has no EKS permissions and is limited to `t2/t3.micro`
-instances, so the procedure in [docs/runbooks/aws-eks.md](docs/runbooks/aws-eks.md)
-cannot be run from it. A free-tier alternative (one `t3.micro` running k3s)
-is in `terraform/ec2-k3s/`; see [ADR 0008](docs/adr/0008-free-tier-ec2-k3s.md).
+- [VPC](docs/evidence/screenshots/m7-aws-console-vpc.png) and
+  [subnets](docs/evidence/screenshots/m7-aws-console-subnets.png) in the AWS Console
+- [EKS cluster Active](docs/evidence/screenshots/m7-aws-console-eks-clusters.png),
+  [3 nodes Ready](docs/evidence/screenshots/m7-aws-console-eks-nodes.png),
+  [kubectl](docs/evidence/screenshots/m7-aws-eks-kubectl.png)
+- [terraform destroy](docs/evidence/screenshots/m7-terraform-destroy-eks.png) and the
+  [empty cluster list](docs/evidence/screenshots/m7-aws-console-eks-empty.png)
+
+Account constraints met on the way (recorded in
+[ADR 0008](docs/adr/0008-free-tier-ec2-k3s.md)): the account only launches
+free-tier instance types, so the node group ran **t3.micro** with VPC CNI
+prefix delegation (configured before the nodes join) instead of t3.medium,
+and the EBS CSI add-on could not be created (`iam:PassRole` denied on its
+role).
 
 ## Kubernetes and Helm
 

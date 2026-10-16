@@ -1,0 +1,40 @@
+$ terraform -chdir=terraform apply tfplan-eks   # retry: t3.micro nodes + VPC CNI prefix delegation
+aws_eks_node_group.main: Destroying... [id=pantrypulse-eks:pantrypulse-nodes]
+aws_eks_node_group.main: Destruction complete after 7s
+aws_eks_addon.vpc_cni: Creating...
+aws_eks_addon.vpc_cni: Creation complete after 8s [id=pantrypulse-eks:vpc-cni]
+aws_eks_node_group.main: Creating...
+aws_eks_node_group.main: Still creating... [00m10s elapsed]
+aws_eks_node_group.main: Still creating... [00m20s elapsed]
+aws_eks_node_group.main: Still creating... [00m30s elapsed]
+aws_eks_node_group.main: Still creating... [00m40s elapsed]
+aws_eks_node_group.main: Still creating... [00m50s elapsed]
+aws_eks_node_group.main: Still creating... [01m00s elapsed]
+aws_eks_node_group.main: Still creating... [01m10s elapsed]
+aws_eks_node_group.main: Still creating... [01m20s elapsed]
+aws_eks_node_group.main: Still creating... [01m30s elapsed]
+aws_eks_node_group.main: Still creating... [01m40s elapsed]
+aws_eks_node_group.main: Creation complete after 1m47s [id=pantrypulse-eks:pantrypulse-nodes]
+aws_eks_addon.core["kube-proxy"]: Creating...
+aws_eks_addon.core["eks-pod-identity-agent"]: Creating...
+aws_eks_addon.core["metrics-server"]: Creating...
+aws_eks_addon.core["coredns"]: Creating...
+aws_eks_addon.core["kube-proxy"]: Creation complete after 7s [id=pantrypulse-eks:kube-proxy]
+aws_eks_addon.core["eks-pod-identity-agent"]: Still creating... [00m10s elapsed]
+aws_eks_addon.core["metrics-server"]: Still creating... [00m10s elapsed]
+aws_eks_addon.core["coredns"]: Still creating... [00m10s elapsed]
+aws_eks_addon.core["coredns"]: Creation complete after 14s [id=pantrypulse-eks:coredns]
+aws_eks_addon.core["metrics-server"]: Still creating... [00m20s elapsed]
+aws_eks_addon.core["eks-pod-identity-agent"]: Still creating... [00m20s elapsed]
+aws_eks_addon.core["eks-pod-identity-agent"]: Creation complete after 24s [id=pantrypulse-eks:eks-pod-identity-agent]
+aws_eks_addon.core["metrics-server"]: Still creating... [00m30s elapsed]
+aws_eks_addon.core["metrics-server"]: Creation complete after 34s [id=pantrypulse-eks:metrics-server]
+aws_eks_addon.ebs_csi: Creating...
+
+Error: creating EKS Add-On (pantrypulse-eks:aws-ebs-csi-driver): operation error EKS: CreateAddon, https response error StatusCode: 403, RequestID: 97426064-0423-4c5a-82d7-c3a32a7294f3, AccessDeniedException: User: arn:aws:iam::189393508581:user/pratyush-mishra is not authorized to perform: iam:PassRole on resource: arn:aws:iam::189393508581:role/pantrypulse-eks-ebs-csi because no identity-based policy allows the iam:PassRole action (Service: AWSWesleyFrontend; Status Code: 403; Error Code: AccessDeniedException; Request ID: f82152bf-6b8e-42b8-83fe-54d010b41fbb; Proxy: null)
+
+  with aws_eks_addon.ebs_csi,
+  on eks.tf line 107, in resource "aws_eks_addon" "ebs_csi":
+ 107: resource "aws_eks_addon" "ebs_csi" {
+
+EXIT 1

@@ -55,3 +55,21 @@ The EKS stack stays in `terraform/` as the production-shaped design.
 - What *was* proven on AWS: the network part of `terraform/` (VPC with 2
   public and 2 private subnets) was applied with `-target` and destroyed;
   see `docs/evidence/transcripts/aws-vpc-*.txt`.
+
+## Update: EKS applied (2026-10-16, evening)
+
+The account administrator then granted `eks:*`, the EKS IAM roles and
+`t3.medium`. The EKS stack in `terraform/` was applied and destroyed:
+
+- With `t3.medium` the node group failed: `InvalidParameterCombination - The
+  specified instance type is not eligible for Free Tier` (the account is on
+  the AWS Free plan, which applies on top of the IAM allowance).
+- Retried with **3 × t3.micro**. A t3.micro has 4 pod slots by ENI count, so
+  `vpc-cni` is now its own add-on with `ENABLE_PREFIX_DELEGATION=true`,
+  created *before* the node group (`terraform/eks.tf`). The node group became
+  ACTIVE in 1m47s and all 13 system pods ran.
+- `aws-ebs-csi-driver` failed: `iam:PassRole` was not granted for its role.
+  Nothing on the cluster needed a volume, so the run continued.
+- `terraform destroy` removed everything; `list-clusters` returned `[]`.
+
+The EC2 + k3s stack stays as a documented free-tier fallback.

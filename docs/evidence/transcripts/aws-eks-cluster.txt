@@ -1,0 +1,44 @@
+# recorded 2026-10-16 19:12:04 IST
+$ aws eks describe-cluster --region ap-south-1 --name pantrypulse-eks --query cluster.[name,status,version,platformVersion] --output text
+pantrypulse-eks	ACTIVE	1.35	eks.24
+
+$ aws eks describe-nodegroup --region ap-south-1 --cluster-name pantrypulse-eks --nodegroup-name pantrypulse-nodes --query nodegroup.[nodegroupName,status,instanceTypes[0],scalingConfig] --output json
+[
+    "pantrypulse-nodes",
+    "ACTIVE",
+    "t3.micro",
+    {
+        "minSize": 2,
+        "maxSize": 3,
+        "desiredSize": 3
+    }
+]
+
+$ kubectl get nodes -o wide
+NAME                                         STATUS   ROLES    AGE    VERSION               INTERNAL-IP   EXTERNAL-IP     OS-IMAGE                        KERNEL-VERSION                     CONTAINER-RUNTIME
+ip-10-42-0-126.ap-south-1.compute.internal   Ready    <none>   100s   v1.35.8-eks-b9510e3   10.42.0.126   13.127.14.74    Amazon Linux 2023.12.20261012   6.12.111-136.204.amzn2023.x86_64   containerd://2.3.5+unknown
+ip-10-42-17-99.ap-south-1.compute.internal   Ready    <none>   100s   v1.35.8-eks-b9510e3   10.42.17.99   52.66.169.47    Amazon Linux 2023.12.20261012   6.12.111-136.204.amzn2023.x86_64   containerd://2.3.5+unknown
+ip-10-42-9-76.ap-south-1.compute.internal    Ready    <none>   100s   v1.35.8-eks-b9510e3   10.42.9.76    13.233.47.133   Amazon Linux 2023.12.20261012   6.12.111-136.204.amzn2023.x86_64   containerd://2.3.5+unknown
+
+$ kubectl get pods -A -o wide
+NAMESPACE     NAME                              READY   STATUS    RESTARTS   AGE    IP             NODE                                         NOMINATED NODE   READINESS GATES
+kube-system   aws-node-4qtkr                    2/2     Running   0          101s   10.42.17.99    ip-10-42-17-99.ap-south-1.compute.internal   <none>           <none>
+kube-system   aws-node-64f9g                    2/2     Running   0          101s   10.42.9.76     ip-10-42-9-76.ap-south-1.compute.internal    <none>           <none>
+kube-system   aws-node-vnt8s                    2/2     Running   0          101s   10.42.0.126    ip-10-42-0-126.ap-south-1.compute.internal   <none>           <none>
+kube-system   coredns-bf6759cdf-49nqd           1/1     Running   0          40m    10.42.13.192   ip-10-42-9-76.ap-south-1.compute.internal    <none>           <none>
+kube-system   coredns-bf6759cdf-vqp6s           1/1     Running   0          40m    10.42.13.193   ip-10-42-9-76.ap-south-1.compute.internal    <none>           <none>
+kube-system   eks-pod-identity-agent-h4kdm      1/1     Running   0          50s    10.42.0.126    ip-10-42-0-126.ap-south-1.compute.internal   <none>           <none>
+kube-system   eks-pod-identity-agent-slg2z      1/1     Running   0          50s    10.42.17.99    ip-10-42-17-99.ap-south-1.compute.internal   <none>           <none>
+kube-system   eks-pod-identity-agent-vt69q      1/1     Running   0          50s    10.42.9.76     ip-10-42-9-76.ap-south-1.compute.internal    <none>           <none>
+kube-system   kube-proxy-227dd                  1/1     Running   0          101s   10.42.0.126    ip-10-42-0-126.ap-south-1.compute.internal   <none>           <none>
+kube-system   kube-proxy-mmqdx                  1/1     Running   0          101s   10.42.17.99    ip-10-42-17-99.ap-south-1.compute.internal   <none>           <none>
+kube-system   kube-proxy-zjf2k                  1/1     Running   0          101s   10.42.9.76     ip-10-42-9-76.ap-south-1.compute.internal    <none>           <none>
+kube-system   metrics-server-7454cc6b65-4qtcg   1/1     Running   0          50s    10.42.24.64    ip-10-42-17-99.ap-south-1.compute.internal   <none>           <none>
+kube-system   metrics-server-7454cc6b65-nxd5t   1/1     Running   0          50s    10.42.7.64     ip-10-42-0-126.ap-south-1.compute.internal   <none>           <none>
+
+$ kubectl top nodes
+NAME                                         CPU(cores)   CPU(%)   MEMORY(bytes)   MEMORY(%)   
+ip-10-42-0-126.ap-south-1.compute.internal   40m          2%       368Mi           71%         
+ip-10-42-17-99.ap-south-1.compute.internal   35m          1%       351Mi           68%         
+ip-10-42-9-76.ap-south-1.compute.internal    45m          2%       357Mi           69%         
+

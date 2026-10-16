@@ -4,9 +4,6 @@ This is the instructor's checklist from `GRADING.md`, mapped to this
 repository. Status values:
 
 - **Done**: verified with the linked evidence.
-- **BLOCKED (AWS account)**: the AWS IAM user available for this project has
-  no EKS permissions (`eks:ListClusters` → `AccessDeniedException`), so the
-  EKS cluster cannot be created from it.
 - **Owner action**: only the repository owner can do it.
 
 Deadline: **Sunday 19 October 2026, 11:59 PM IST**.
@@ -72,10 +69,9 @@ Deadline: **Sunday 19 October 2026, 11:59 PM IST**.
 | `terraform/` with valid HCL | Done | [m7-terraform-validate](evidence/screenshots/m7-terraform-validate.png) |
 | `terraform init` | Done | [m7-terraform-init](evidence/screenshots/m7-terraform-init.png) |
 | `terraform plan` output | Done: offline plan, 29 to add, no AWS calls | [m7-terraform-plan](evidence/screenshots/m7-terraform-plan.png) |
-| VPC with ≥ 2 public subnets provisioned | Done on AWS 2026-10-16: `terraform apply` of the network resources in `terraform/` (13 added): `pantrypulse-vpc` 10.42.0.0/16, public subnets in ap-south-1a/1b, private subnets in 1a/1b | [m7-aws-vpc-apply](evidence/screenshots/m7-aws-vpc-apply.png), [m7-aws-vpc-subnets](evidence/screenshots/m7-aws-vpc-subnets.png) (AWS CLI) |
-| EKS cluster + node group provisioned | **BLOCKED (AWS account)**: code complete and planned (29 resources); the IAM user has no `eks:*` permissions and its guardrail policy denies `t3.medium` | [runbook](runbooks/aws-eks.md), [ADR 0008](adr/0008-free-tier-ec2-k3s.md) |
-| AWS Console screenshot | **Owner action (optional)**: the evidence above is AWS CLI output; a Console screenshot needs a browser login | — |
-| `terraform destroy` output | Done on AWS 2026-10-16: 13 destroyed, then no `Project=pantrypulse` VPCs or instances left | [m7-terraform-destroy](evidence/screenshots/m7-terraform-destroy.png) |
+| VPC with ≥ 2 public subnets provisioned | Done on AWS 2026-10-16: `pantrypulse-vpc` 10.42.0.0/16, public subnets in ap-south-1a/1b, private subnets in 1a/1b | [m7-aws-console-vpc](evidence/screenshots/m7-aws-console-vpc.png), [m7-aws-console-subnets](evidence/screenshots/m7-aws-console-subnets.png) (AWS Console), [m7-aws-vpc-subnets](evidence/screenshots/m7-aws-vpc-subnets.png) (AWS CLI) |
+| EKS cluster + node group provisioned | Done on AWS 2026-10-16: `pantrypulse-eks` (1.35) Active, node group `pantrypulse-nodes` with 3 × t3.micro Ready, 13 system pods Running | [m7-aws-console-eks-clusters](evidence/screenshots/m7-aws-console-eks-clusters.png), [m7-aws-console-eks-nodes](evidence/screenshots/m7-aws-console-eks-nodes.png), [m7-aws-eks-kubectl](evidence/screenshots/m7-aws-eks-kubectl.png), [m7-aws-eks-apply](evidence/screenshots/m7-aws-eks-apply.png) |
+| `terraform destroy` output | Done on AWS 2026-10-16: whole stack destroyed; no clusters, VPCs or instances left | [m7-terraform-destroy-eks](evidence/screenshots/m7-terraform-destroy-eks.png), [m7-aws-console-eks-empty](evidence/screenshots/m7-aws-console-eks-empty.png) |
 | `terraform.tfvars.example`, no real credentials | Done | `terraform/terraform.tfvars.example` |
 
 ## Kubernetes and Helm

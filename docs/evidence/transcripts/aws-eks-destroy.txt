@@ -1,0 +1,1455 @@
+$ terraform -chdir=terraform destroy -auto-approve
+aws_vpc.main: Refreshing state... [id=vpc-0fe9e1acc5cd69f39]
+aws_iam_role.cluster: Refreshing state... [id=pantrypulse-eks-cluster-role]
+aws_iam_role.node: Refreshing state... [id=pantrypulse-eks-node-role]
+aws_iam_role.ebs_csi: Refreshing state... [id=pantrypulse-eks-ebs-csi]
+aws_subnet.public[1]: Refreshing state... [id=subnet-0c3a7cdc3fc45150b]
+aws_internet_gateway.main: Refreshing state... [id=igw-0d0390fd9b157296d]
+aws_subnet.private[1]: Refreshing state... [id=subnet-0cd10c228cae5df2d]
+aws_subnet.public[0]: Refreshing state... [id=subnet-0f279f9ce9a3aad8f]
+aws_route_table.public: Refreshing state... [id=rtb-02c4000cc36dc7a09]
+aws_route_table.private: Refreshing state... [id=rtb-0cefa6ac28159d1f4]
+aws_subnet.private[0]: Refreshing state... [id=subnet-0a8adf599629a7ef5]
+aws_route_table_association.private[0]: Refreshing state... [id=rtbassoc-05af075f263c8d3e1]
+aws_route_table_association.private[1]: Refreshing state... [id=rtbassoc-0eda64b12ddac5aa1]
+aws_route_table_association.public[0]: Refreshing state... [id=rtbassoc-060d989dbe8e7525e]
+aws_route.public_internet: Refreshing state... [id=r-rtb-02c4000cc36dc7a091080289494]
+aws_route_table_association.public[1]: Refreshing state... [id=rtbassoc-0a005237bce3d5a0d]
+aws_iam_role_policy_attachment.ebs_csi: Refreshing state... [id=pantrypulse-eks-ebs-csi/arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy]
+aws_iam_role_policy_attachment.cluster: Refreshing state... [id=pantrypulse-eks-cluster-role/arn:aws:iam::aws:policy/AmazonEKSClusterPolicy]
+aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]: Refreshing state... [id=pantrypulse-eks-node-role/arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly]
+aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"]: Refreshing state... [id=pantrypulse-eks-node-role/arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy]
+aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"]: Refreshing state... [id=pantrypulse-eks-node-role/arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy]
+aws_eks_cluster.main: Refreshing state... [id=pantrypulse-eks]
+aws_eks_addon.vpc_cni: Refreshing state... [id=pantrypulse-eks:vpc-cni]
+aws_eks_node_group.main: Refreshing state... [id=pantrypulse-eks:pantrypulse-nodes]
+aws_eks_addon.core["metrics-server"]: Refreshing state... [id=pantrypulse-eks:metrics-server]
+aws_eks_addon.core["kube-proxy"]: Refreshing state... [id=pantrypulse-eks:kube-proxy]
+aws_eks_addon.core["coredns"]: Refreshing state... [id=pantrypulse-eks:coredns]
+aws_eks_addon.core["eks-pod-identity-agent"]: Refreshing state... [id=pantrypulse-eks:eks-pod-identity-agent]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # aws_eks_addon.core["coredns"] will be destroyed
+  - resource "aws_eks_addon" "core" {
+      - addon_name                  = "coredns" -> null
+      - addon_version               = "v1.13.2-eksbuild.50" -> null
+      - arn                         = "arn:aws:eks:ap-south-1:189393508581:addon/pantrypulse-eks/coredns/2cd0a278-fd41-8ce8-d127-cf400b3edbab" -> null
+      - cluster_name                = "pantrypulse-eks" -> null
+      - created_at                  = "2026-10-16T13:41:11Z" -> null
+      - id                          = "pantrypulse-eks:coredns" -> null
+      - modified_at                 = "2026-10-16T13:41:23Z" -> null
+      - region                      = "ap-south-1" -> null
+      - resolve_conflicts_on_create = "OVERWRITE" -> null
+      - resolve_conflicts_on_update = "OVERWRITE" -> null
+      - tags                        = {} -> null
+      - tags_all                    = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+        # (2 unchanged attributes hidden)
+
+      - namespace_config {
+          - namespace = "kube-system" -> null
+        }
+    }
+
+  # aws_eks_addon.core["eks-pod-identity-agent"] will be destroyed
+  - resource "aws_eks_addon" "core" {
+      - addon_name                  = "eks-pod-identity-agent" -> null
+      - addon_version               = "v1.3.10-eksbuild.3" -> null
+      - arn                         = "arn:aws:eks:ap-south-1:189393508581:addon/pantrypulse-eks/eks-pod-identity-agent/94d0a278-fd40-7598-6436-183efed143a9" -> null
+      - cluster_name                = "pantrypulse-eks" -> null
+      - created_at                  = "2026-10-16T13:41:11Z" -> null
+      - id                          = "pantrypulse-eks:eks-pod-identity-agent" -> null
+      - modified_at                 = "2026-10-16T13:41:27Z" -> null
+      - region                      = "ap-south-1" -> null
+      - resolve_conflicts_on_create = "OVERWRITE" -> null
+      - resolve_conflicts_on_update = "OVERWRITE" -> null
+      - tags                        = {} -> null
+      - tags_all                    = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+        # (2 unchanged attributes hidden)
+
+      - namespace_config {
+          - namespace = "kube-system" -> null
+        }
+    }
+
+  # aws_eks_addon.core["kube-proxy"] will be destroyed
+  - resource "aws_eks_addon" "core" {
+      - addon_name                  = "kube-proxy" -> null
+      - addon_version               = "v1.35.3-eksbuild.29" -> null
+      - arn                         = "arn:aws:eks:ap-south-1:189393508581:addon/pantrypulse-eks/kube-proxy/a8d0a278-fd40-b00e-d83d-e33a6ce7202a" -> null
+      - cluster_name                = "pantrypulse-eks" -> null
+      - created_at                  = "2026-10-16T13:41:11Z" -> null
+      - id                          = "pantrypulse-eks:kube-proxy" -> null
+      - modified_at                 = "2026-10-16T13:41:17Z" -> null
+      - region                      = "ap-south-1" -> null
+      - resolve_conflicts_on_create = "OVERWRITE" -> null
+      - resolve_conflicts_on_update = "OVERWRITE" -> null
+      - tags                        = {} -> null
+      - tags_all                    = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+        # (2 unchanged attributes hidden)
+
+      - namespace_config {
+          - namespace = "kube-system" -> null
+        }
+    }
+
+  # aws_eks_addon.core["metrics-server"] will be destroyed
+  - resource "aws_eks_addon" "core" {
+      - addon_name                  = "metrics-server" -> null
+      - addon_version               = "v0.9.0-eksbuild.13" -> null
+      - arn                         = "arn:aws:eks:ap-south-1:189393508581:addon/pantrypulse-eks/metrics-server/98d0a278-fd43-f6a3-8a4a-b1a108d0312b" -> null
+      - cluster_name                = "pantrypulse-eks" -> null
+      - created_at                  = "2026-10-16T13:41:11Z" -> null
+      - id                          = "pantrypulse-eks:metrics-server" -> null
+      - modified_at                 = "2026-10-16T13:41:44Z" -> null
+      - region                      = "ap-south-1" -> null
+      - resolve_conflicts_on_create = "OVERWRITE" -> null
+      - resolve_conflicts_on_update = "OVERWRITE" -> null
+      - tags                        = {} -> null
+      - tags_all                    = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+        # (2 unchanged attributes hidden)
+
+      - namespace_config {
+          - namespace = "kube-system" -> null
+        }
+    }
+
+  # aws_eks_addon.vpc_cni will be destroyed
+  - resource "aws_eks_addon" "vpc_cni" {
+      - addon_name                  = "vpc-cni" -> null
+      - addon_version               = "v1.22.4-eksbuild.3" -> null
+      - arn                         = "arn:aws:eks:ap-south-1:189393508581:addon/pantrypulse-eks/vpc-cni/4ed0a278-1c0e-ebe4-6596-3d9f331f4dba" -> null
+      - cluster_name                = "pantrypulse-eks" -> null
+      - configuration_values        = jsonencode(
+            {
+              - env = {
+                  - ENABLE_PREFIX_DELEGATION = "true"
+                  - WARM_PREFIX_TARGET       = "1"
+                }
+            }
+        ) -> null
+      - created_at                  = "2026-10-16T13:39:16Z" -> null
+      - id                          = "pantrypulse-eks:vpc-cni" -> null
+      - modified_at                 = "2026-10-16T13:39:22Z" -> null
+      - region                      = "ap-south-1" -> null
+      - resolve_conflicts_on_create = "OVERWRITE" -> null
+      - resolve_conflicts_on_update = "OVERWRITE" -> null
+      - tags                        = {} -> null
+      - tags_all                    = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+        # (1 unchanged attribute hidden)
+
+      - namespace_config {
+          - namespace = "kube-system" -> null
+        }
+    }
+
+  # aws_eks_cluster.main will be destroyed
+  - resource "aws_eks_cluster" "main" {
+      - arn                           = "arn:aws:eks:ap-south-1:189393508581:cluster/pantrypulse-eks" -> null
+      - bootstrap_self_managed_addons = true -> null
+      - certificate_authority         = [
+          - {
+              - data = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURNVENDQWhtZ0F3SUJBZ0lRYnJnZklONkNrZENobTZvTWVhQXpFakFOQmdrcWhraUc5dzBCQVFzRkFEQW4KTVJBd0RnWURWUVFLRXdkQlYxTWdSVXRUTVJNd0VRWURWUVFERXdwcmRXSmxjbTVsZEdWek1CNFhEVEkyTVRBeApOakV5TlRRek1Wb1hEVE14TVRBeE5URXlOVFF6TVZvd0p6RVFNQTRHQTFVRUNoTUhRVmRUSUVWTFV6RVRNQkVHCkExVUVBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUIKQU5tTlluTDJRVnlBMC93SytUOUl5eG9zcEd1WDlWSS9SZ1NxMks3cjBwTm1TSHVJdVRBWWpWWVoxbXdlMXlYdQpHSGtQVVpLSS8rSnZtRjRtUWRTdzJ0c3JRS3Q0OStUWHVxM2dhNk95eDhXc0tKUEtkNnhVOTlMOUtpY1hWb2VrCk9TbXQxNmtacTR5N29zNXNGTEpSZmR4ME0wWlUyS0xBU2VQcllRRjl2cFVyVnlzRzZIQTNEWDN6TkJmVXVWd1UKZkNKN24vR2dZVkQxbEdPcXJMNHg4QUd0c2FmVjkvdkFaN0pscHc1UWg0TUJ6WlVSdmFaY1pkSmZFUENPY0ppeQp4OWVRb1pWd2RBZ2pmOXkyYXdQQ2NvNDdlR1psL2NFTFFmWFZMNlhMZGpvNE90ZmhxVkMvZ2MrWE5mK0tZR25UCkgwYy9PbzE0YUN5cFRJY3hlOThZNjZzQ0F3RUFBYU5aTUZjd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWQKRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZDOXVRRzk2RW9XdEJVM3hsYUxZSXNFNlhuOEVNQlVHQTFVZApFUVFPTUF5Q0NtdDFZbVZ5Ym1WMFpYTXdEUVlKS29aSWh2Y05BUUVMQlFBRGdnRUJBRXVPaUI4WnBJN2lLeVh6CnRndm10R2dzUHpPVnVvZXJveUE0YTJZQ1ZBZzM3Y2h5Vnl0T0FjemQxemp3S0ZuelkxNzR2SlpWVkt5cGF3aVUKdHlwbHU0L1RKQWhPYzdnWFpEQjZpSmJTdFlNT3h6bDJyR1BPV1gyNWp2OE1HVkw1Ukwvamg0WFdtRU4yY3EzdApsMzBlOW9YVzQzb3duUXdPZnhpK2s0RTdsUkYxaHRNVU80K0dGTWJyL2dVYkkrd25wdktGY1o5S1hOb2xvV0o1CnBiNWFpTHVuYSthQmRQK3EwWS9uRVRSV0YyTk9UOVFtNlJEV012T1kxdmduWU1hbFo5bE5BbVVWSHF3UUlEd1IKYUszQU1OLzB4UCtId0Y3QXlEZXFXQlpzZDZqL2FOeEhZdEFHOFE5TGtlcm5TZ2NSZWJsV0RqYzlFRnJWMWRHMwp0ZEkvMjRzPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+            },
+        ] -> null
+      - created_at                    = "2026-10-16T12:54:24Z" -> null
+      - deletion_protection           = false -> null
+      - enabled_cluster_log_types     = [] -> null
+      - endpoint                      = "https://D9C349B6BF9159761EE7490246039C57.gr7.ap-south-1.eks.amazonaws.com" -> null
+      - id                            = "pantrypulse-eks" -> null
+      - identity                      = [
+          - {
+              - oidc = [
+                  - {
+                      - issuer = "https://oidc.eks.ap-south-1.amazonaws.com/id/D9C349B6BF9159761EE7490246039C57"
+                    },
+                ]
+            },
+        ] -> null
+      - name                          = "pantrypulse-eks" -> null
+      - platform_version              = "eks.24" -> null
+      - region                        = "ap-south-1" -> null
+      - role_arn                      = "arn:aws:iam::189393508581:role/pantrypulse-eks-cluster-role" -> null
+      - status                        = "ACTIVE" -> null
+      - tags                          = {} -> null
+      - tags_all                      = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+      - version                       = "1.35" -> null
+
+      - access_config {
+          - authentication_mode                         = "API" -> null
+          - bootstrap_cluster_creator_admin_permissions = true -> null
+        }
+
+      - compute_config {
+          - enabled       = false -> null
+          - node_pools    = [] -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - control_plane_scaling_config {
+          - tier = "standard" -> null
+        }
+
+      - kube_api_server_config {
+          - event_ttl = "60m" -> null
+
+          - service_node_port_range {
+              - max_port = 32767 -> null
+              - min_port = 30000 -> null
+            }
+        }
+
+      - kube_controller_manager_config {
+          - horizontal_pod_autoscaler_controller_config {
+              - horizontal_pod_autoscaler_sync_period = "15s" -> null
+            }
+          - pod_gc_controller_config {
+              - terminated_pod_gc_threshold = 12500 -> null
+            }
+        }
+
+      - kube_scheduler_config {
+          - node_resources_fit {
+              - scoring_strategy {
+                  - type = "LeastAllocated" -> null
+
+                  - resource {
+                      - name   = "cpu" -> null
+                      - weight = 1 -> null
+                    }
+                  - resource {
+                      - name   = "memory" -> null
+                      - weight = 1 -> null
+                    }
+                }
+            }
+        }
+
+      - kubernetes_network_config {
+          - ip_family         = "ipv4" -> null
+          - service_ipv4_cidr = "172.20.0.0/16" -> null
+            # (1 unchanged attribute hidden)
+
+          - elastic_load_balancing {
+              - enabled = false -> null
+            }
+        }
+
+      - storage_config {
+          - block_storage {
+              - enabled = false -> null
+            }
+        }
+
+      - upgrade_policy {
+          - support_type = "EXTENDED" -> null
+        }
+
+      - vpc_config {
+          - cluster_security_group_id = "sg-0fc024f563bfc519f" -> null
+          - control_plane_egress_mode = "AWS_MANAGED" -> null
+          - endpoint_private_access   = true -> null
+          - endpoint_public_access    = true -> null
+          - public_access_cidrs       = [
+              - "202.131.133.37/32",
+            ] -> null
+          - security_group_ids        = [] -> null
+          - subnet_ids                = [
+              - "subnet-0a8adf599629a7ef5",
+              - "subnet-0c3a7cdc3fc45150b",
+              - "subnet-0cd10c228cae5df2d",
+              - "subnet-0f279f9ce9a3aad8f",
+            ] -> null
+          - vpc_id                    = "vpc-0fe9e1acc5cd69f39" -> null
+        }
+    }
+
+  # aws_eks_node_group.main will be destroyed
+  - resource "aws_eks_node_group" "main" {
+      - ami_type               = "AL2023_x86_64_STANDARD" -> null
+      - arn                    = "arn:aws:eks:ap-south-1:189393508581:nodegroup/pantrypulse-eks/pantrypulse-nodes/7ad0a278-2ac9-910f-1e69-b1a7406b2e55" -> null
+      - capacity_type          = "ON_DEMAND" -> null
+      - cluster_name           = "pantrypulse-eks" -> null
+      - disk_size              = 20 -> null
+      - id                     = "pantrypulse-eks:pantrypulse-nodes" -> null
+      - instance_types         = [
+          - "t3.micro",
+        ] -> null
+      - labels                 = {
+          - "workload" = "pantrypulse"
+        } -> null
+      - node_group_name        = "pantrypulse-nodes" -> null
+      - node_role_arn          = "arn:aws:iam::189393508581:role/pantrypulse-eks-node-role" -> null
+      - region                 = "ap-south-1" -> null
+      - release_version        = "1.35.8-20261012" -> null
+      - resources              = [
+          - {
+              - autoscaling_groups              = [
+                  - {
+                      - name = "eks-pantrypulse-nodes-7ad0a278-2ac9-910f-1e69-b1a7406b2e55"
+                    },
+                ]
+                # (1 unchanged attribute hidden)
+            },
+        ] -> null
+      - status                 = "ACTIVE" -> null
+      - subnet_ids             = [
+          - "subnet-0c3a7cdc3fc45150b",
+          - "subnet-0f279f9ce9a3aad8f",
+        ] -> null
+      - tags                   = {} -> null
+      - tags_all               = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+      - version                = "1.35" -> null
+        # (1 unchanged attribute hidden)
+
+      - scaling_config {
+          - desired_size = 3 -> null
+          - max_size     = 3 -> null
+          - min_size     = 2 -> null
+        }
+
+      - update_config {
+          - max_unavailable            = 1 -> null
+          - max_unavailable_percentage = 0 -> null
+            # (1 unchanged attribute hidden)
+        }
+    }
+
+  # aws_iam_role.cluster will be destroyed
+  - resource "aws_iam_role" "cluster" {
+      - arn                   = "arn:aws:iam::189393508581:role/pantrypulse-eks-cluster-role" -> null
+      - assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = [
+                          - "sts:AssumeRole",
+                          - "sts:TagSession",
+                        ]
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "eks.amazonaws.com"
+                        }
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - create_date           = "2026-10-16T12:54:19Z" -> null
+      - force_detach_policies = false -> null
+      - id                    = "pantrypulse-eks-cluster-role" -> null
+      - managed_policy_arns   = [
+          - "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
+        ] -> null
+      - max_session_duration  = 3600 -> null
+      - name                  = "pantrypulse-eks-cluster-role" -> null
+      - path                  = "/" -> null
+      - tags                  = {} -> null
+      - tags_all              = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+      - unique_id             = "AROASYGF3TDSQQUZLN7IN" -> null
+        # (3 unchanged attributes hidden)
+    }
+
+  # aws_iam_role.ebs_csi will be destroyed
+  - resource "aws_iam_role" "ebs_csi" {
+      - arn                   = "arn:aws:iam::189393508581:role/pantrypulse-eks-ebs-csi" -> null
+      - assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = [
+                          - "sts:AssumeRole",
+                          - "sts:TagSession",
+                        ]
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "pods.eks.amazonaws.com"
+                        }
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - create_date           = "2026-10-16T12:54:19Z" -> null
+      - force_detach_policies = false -> null
+      - id                    = "pantrypulse-eks-ebs-csi" -> null
+      - managed_policy_arns   = [
+          - "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy",
+        ] -> null
+      - max_session_duration  = 3600 -> null
+      - name                  = "pantrypulse-eks-ebs-csi" -> null
+      - path                  = "/" -> null
+      - tags                  = {} -> null
+      - tags_all              = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+      - unique_id             = "AROASYGF3TDSV3LB2JP6R" -> null
+        # (3 unchanged attributes hidden)
+    }
+
+  # aws_iam_role.node will be destroyed
+  - resource "aws_iam_role" "node" {
+      - arn                   = "arn:aws:iam::189393508581:role/pantrypulse-eks-node-role" -> null
+      - assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "sts:AssumeRole"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "ec2.amazonaws.com"
+                        }
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - create_date           = "2026-10-16T12:54:19Z" -> null
+      - force_detach_policies = false -> null
+      - id                    = "pantrypulse-eks-node-role" -> null
+      - managed_policy_arns   = [
+          - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
+          - "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
+          - "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
+        ] -> null
+      - max_session_duration  = 3600 -> null
+      - name                  = "pantrypulse-eks-node-role" -> null
+      - path                  = "/" -> null
+      - tags                  = {} -> null
+      - tags_all              = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+      - unique_id             = "AROASYGF3TDSR7MSBY7PD" -> null
+        # (3 unchanged attributes hidden)
+    }
+
+  # aws_iam_role_policy_attachment.cluster will be destroyed
+  - resource "aws_iam_role_policy_attachment" "cluster" {
+      - id         = "pantrypulse-eks-cluster-role/arn:aws:iam::aws:policy/AmazonEKSClusterPolicy" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy" -> null
+      - role       = "pantrypulse-eks-cluster-role" -> null
+    }
+
+  # aws_iam_role_policy_attachment.ebs_csi will be destroyed
+  - resource "aws_iam_role_policy_attachment" "ebs_csi" {
+      - id         = "pantrypulse-eks-ebs-csi/arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy" -> null
+      - role       = "pantrypulse-eks-ebs-csi" -> null
+    }
+
+  # aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"] will be destroyed
+  - resource "aws_iam_role_policy_attachment" "node" {
+      - id         = "pantrypulse-eks-node-role/arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly" -> null
+      - role       = "pantrypulse-eks-node-role" -> null
+    }
+
+  # aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"] will be destroyed
+  - resource "aws_iam_role_policy_attachment" "node" {
+      - id         = "pantrypulse-eks-node-role/arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy" -> null
+      - role       = "pantrypulse-eks-node-role" -> null
+    }
+
+  # aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"] will be destroyed
+  - resource "aws_iam_role_policy_attachment" "node" {
+      - id         = "pantrypulse-eks-node-role/arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy" -> null
+      - role       = "pantrypulse-eks-node-role" -> null
+    }
+
+  # aws_internet_gateway.main will be destroyed
+  - resource "aws_internet_gateway" "main" {
+      - arn      = "arn:aws:ec2:ap-south-1:189393508581:internet-gateway/igw-0d0390fd9b157296d" -> null
+      - id       = "igw-0d0390fd9b157296d" -> null
+      - owner_id = "189393508581" -> null
+      - region   = "ap-south-1" -> null
+      - tags     = {
+          - "Name" = "pantrypulse-igw"
+        } -> null
+      - tags_all = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Name"        = "pantrypulse-igw"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+      - vpc_id   = "vpc-0fe9e1acc5cd69f39" -> null
+    }
+
+  # aws_route.public_internet will be destroyed
+  - resource "aws_route" "public_internet" {
+      - destination_cidr_block      = "0.0.0.0/0" -> null
+      - gateway_id                  = "igw-0d0390fd9b157296d" -> null
+      - id                          = "r-rtb-02c4000cc36dc7a091080289494" -> null
+      - origin                      = "CreateRoute" -> null
+      - region                      = "ap-south-1" -> null
+      - route_table_id              = "rtb-02c4000cc36dc7a09" -> null
+      - state                       = "active" -> null
+        # (14 unchanged attributes hidden)
+    }
+
+  # aws_route_table.private will be destroyed
+  - resource "aws_route_table" "private" {
+      - arn              = "arn:aws:ec2:ap-south-1:189393508581:route-table/rtb-0cefa6ac28159d1f4" -> null
+      - id               = "rtb-0cefa6ac28159d1f4" -> null
+      - owner_id         = "189393508581" -> null
+      - propagating_vgws = [] -> null
+      - region           = "ap-south-1" -> null
+      - route            = [] -> null
+      - tags             = {
+          - "Name" = "pantrypulse-private-rt"
+        } -> null
+      - tags_all         = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Name"        = "pantrypulse-private-rt"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+      - vpc_id           = "vpc-0fe9e1acc5cd69f39" -> null
+    }
+
+  # aws_route_table.public will be destroyed
+  - resource "aws_route_table" "public" {
+      - arn              = "arn:aws:ec2:ap-south-1:189393508581:route-table/rtb-02c4000cc36dc7a09" -> null
+      - id               = "rtb-02c4000cc36dc7a09" -> null
+      - owner_id         = "189393508581" -> null
+      - propagating_vgws = [] -> null
+      - region           = "ap-south-1" -> null
+      - route            = [
+          - {
+              - cidr_block                 = "0.0.0.0/0"
+              - gateway_id                 = "igw-0d0390fd9b157296d"
+                # (12 unchanged attributes hidden)
+            },
+        ] -> null
+      - tags             = {
+          - "Name" = "pantrypulse-public-rt"
+        } -> null
+      - tags_all         = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Name"        = "pantrypulse-public-rt"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+      - vpc_id           = "vpc-0fe9e1acc5cd69f39" -> null
+    }
+
+  # aws_route_table_association.private[0] will be destroyed
+  - resource "aws_route_table_association" "private" {
+      - id             = "rtbassoc-05af075f263c8d3e1" -> null
+      - region         = "ap-south-1" -> null
+      - route_table_id = "rtb-0cefa6ac28159d1f4" -> null
+      - subnet_id      = "subnet-0a8adf599629a7ef5" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # aws_route_table_association.private[1] will be destroyed
+  - resource "aws_route_table_association" "private" {
+      - id             = "rtbassoc-0eda64b12ddac5aa1" -> null
+      - region         = "ap-south-1" -> null
+      - route_table_id = "rtb-0cefa6ac28159d1f4" -> null
+      - subnet_id      = "subnet-0cd10c228cae5df2d" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # aws_route_table_association.public[0] will be destroyed
+  - resource "aws_route_table_association" "public" {
+      - id             = "rtbassoc-060d989dbe8e7525e" -> null
+      - region         = "ap-south-1" -> null
+      - route_table_id = "rtb-02c4000cc36dc7a09" -> null
+      - subnet_id      = "subnet-0f279f9ce9a3aad8f" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # aws_route_table_association.public[1] will be destroyed
+  - resource "aws_route_table_association" "public" {
+      - id             = "rtbassoc-0a005237bce3d5a0d" -> null
+      - region         = "ap-south-1" -> null
+      - route_table_id = "rtb-02c4000cc36dc7a09" -> null
+      - subnet_id      = "subnet-0c3a7cdc3fc45150b" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # aws_subnet.private[0] will be destroyed
+  - resource "aws_subnet" "private" {
+      - arn                                            = "arn:aws:ec2:ap-south-1:189393508581:subnet/subnet-0a8adf599629a7ef5" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "ap-south-1a" -> null
+      - availability_zone_id                           = "aps1-az1" -> null
+      - cidr_block                                     = "10.42.128.0/20" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-0a8adf599629a7ef5" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = false -> null
+      - owner_id                                       = "189393508581" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - region                                         = "ap-south-1" -> null
+      - tags                                           = {
+          - "Name"                                  = "pantrypulse-private-ap-south-1a"
+          - "Tier"                                  = "private"
+          - "kubernetes.io/cluster/pantrypulse-eks" = "shared"
+          - "kubernetes.io/role/internal-elb"       = "1"
+        } -> null
+      - tags_all                                       = {
+          - "Environment"                           = "demo"
+          - "ManagedBy"                             = "terraform"
+          - "Name"                                  = "pantrypulse-private-ap-south-1a"
+          - "Owner"                                 = "Pratyush Mishra"
+          - "Project"                               = "pantrypulse"
+          - "Repository"                            = "github.com/PratyushMishra-2nd/DevopsProject"
+          - "Tier"                                  = "private"
+          - "kubernetes.io/cluster/pantrypulse-eks" = "shared"
+          - "kubernetes.io/role/internal-elb"       = "1"
+        } -> null
+      - vpc_id                                         = "vpc-0fe9e1acc5cd69f39" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # aws_subnet.private[1] will be destroyed
+  - resource "aws_subnet" "private" {
+      - arn                                            = "arn:aws:ec2:ap-south-1:189393508581:subnet/subnet-0cd10c228cae5df2d" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "ap-south-1b" -> null
+      - availability_zone_id                           = "aps1-az3" -> null
+      - cidr_block                                     = "10.42.144.0/20" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-0cd10c228cae5df2d" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = false -> null
+      - owner_id                                       = "189393508581" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - region                                         = "ap-south-1" -> null
+      - tags                                           = {
+          - "Name"                                  = "pantrypulse-private-ap-south-1b"
+          - "Tier"                                  = "private"
+          - "kubernetes.io/cluster/pantrypulse-eks" = "shared"
+          - "kubernetes.io/role/internal-elb"       = "1"
+        } -> null
+      - tags_all                                       = {
+          - "Environment"                           = "demo"
+          - "ManagedBy"                             = "terraform"
+          - "Name"                                  = "pantrypulse-private-ap-south-1b"
+          - "Owner"                                 = "Pratyush Mishra"
+          - "Project"                               = "pantrypulse"
+          - "Repository"                            = "github.com/PratyushMishra-2nd/DevopsProject"
+          - "Tier"                                  = "private"
+          - "kubernetes.io/cluster/pantrypulse-eks" = "shared"
+          - "kubernetes.io/role/internal-elb"       = "1"
+        } -> null
+      - vpc_id                                         = "vpc-0fe9e1acc5cd69f39" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # aws_subnet.public[0] will be destroyed
+  - resource "aws_subnet" "public" {
+      - arn                                            = "arn:aws:ec2:ap-south-1:189393508581:subnet/subnet-0f279f9ce9a3aad8f" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "ap-south-1a" -> null
+      - availability_zone_id                           = "aps1-az1" -> null
+      - cidr_block                                     = "10.42.0.0/20" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-0f279f9ce9a3aad8f" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = true -> null
+      - owner_id                                       = "189393508581" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - region                                         = "ap-south-1" -> null
+      - tags                                           = {
+          - "Name"                                  = "pantrypulse-public-ap-south-1a"
+          - "Tier"                                  = "public"
+          - "kubernetes.io/cluster/pantrypulse-eks" = "shared"
+          - "kubernetes.io/role/elb"                = "1"
+        } -> null
+      - tags_all                                       = {
+          - "Environment"                           = "demo"
+          - "ManagedBy"                             = "terraform"
+          - "Name"                                  = "pantrypulse-public-ap-south-1a"
+          - "Owner"                                 = "Pratyush Mishra"
+          - "Project"                               = "pantrypulse"
+          - "Repository"                            = "github.com/PratyushMishra-2nd/DevopsProject"
+          - "Tier"                                  = "public"
+          - "kubernetes.io/cluster/pantrypulse-eks" = "shared"
+          - "kubernetes.io/role/elb"                = "1"
+        } -> null
+      - vpc_id                                         = "vpc-0fe9e1acc5cd69f39" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # aws_subnet.public[1] will be destroyed
+  - resource "aws_subnet" "public" {
+      - arn                                            = "arn:aws:ec2:ap-south-1:189393508581:subnet/subnet-0c3a7cdc3fc45150b" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "ap-south-1b" -> null
+      - availability_zone_id                           = "aps1-az3" -> null
+      - cidr_block                                     = "10.42.16.0/20" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-0c3a7cdc3fc45150b" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = true -> null
+      - owner_id                                       = "189393508581" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - region                                         = "ap-south-1" -> null
+      - tags                                           = {
+          - "Name"                                  = "pantrypulse-public-ap-south-1b"
+          - "Tier"                                  = "public"
+          - "kubernetes.io/cluster/pantrypulse-eks" = "shared"
+          - "kubernetes.io/role/elb"                = "1"
+        } -> null
+      - tags_all                                       = {
+          - "Environment"                           = "demo"
+          - "ManagedBy"                             = "terraform"
+          - "Name"                                  = "pantrypulse-public-ap-south-1b"
+          - "Owner"                                 = "Pratyush Mishra"
+          - "Project"                               = "pantrypulse"
+          - "Repository"                            = "github.com/PratyushMishra-2nd/DevopsProject"
+          - "Tier"                                  = "public"
+          - "kubernetes.io/cluster/pantrypulse-eks" = "shared"
+          - "kubernetes.io/role/elb"                = "1"
+        } -> null
+      - vpc_id                                         = "vpc-0fe9e1acc5cd69f39" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # aws_vpc.main will be destroyed
+  - resource "aws_vpc" "main" {
+      - arn                                  = "arn:aws:ec2:ap-south-1:189393508581:vpc/vpc-0fe9e1acc5cd69f39" -> null
+      - assign_generated_ipv6_cidr_block     = false -> null
+      - cidr_block                           = "10.42.0.0/16" -> null
+      - default_network_acl_id               = "acl-0e92c7cf571fe6880" -> null
+      - default_route_table_id               = "rtb-0b30b0f0ccecc30c7" -> null
+      - default_security_group_id            = "sg-0681190fa6ffe039b" -> null
+      - dhcp_options_id                      = "dopt-0d694d37cb9cb718e" -> null
+      - enable_dns_hostnames                 = true -> null
+      - enable_dns_support                   = true -> null
+      - enable_network_address_usage_metrics = false -> null
+      - id                                   = "vpc-0fe9e1acc5cd69f39" -> null
+      - instance_tenancy                     = "default" -> null
+      - ipv6_netmask_length                  = 0 -> null
+      - main_route_table_id                  = "rtb-0b30b0f0ccecc30c7" -> null
+      - owner_id                             = "189393508581" -> null
+      - region                               = "ap-south-1" -> null
+      - tags                                 = {
+          - "Name" = "pantrypulse-vpc"
+        } -> null
+      - tags_all                             = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Name"        = "pantrypulse-vpc"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+        # (4 unchanged attributes hidden)
+    }
+
+Plan: 0 to add, 0 to change, 28 to destroy.
+
+Changes to Outputs:
+  - cluster_endpoint    = "https://D9C349B6BF9159761EE7490246039C57.gr7.ap-south-1.eks.amazonaws.com" -> null
+  - cluster_name        = "pantrypulse-eks" -> null
+  - cluster_version     = "1.35" -> null
+  - configure_kubectl   = "aws eks update-kubeconfig --region ap-south-1 --name pantrypulse-eks" -> null
+  - nat_gateway_enabled = false -> null
+  - node_group_name     = "pantrypulse-nodes" -> null
+  - private_subnet_ids  = [
+      - "subnet-0a8adf599629a7ef5",
+      - "subnet-0cd10c228cae5df2d",
+    ] -> null
+  - public_subnet_ids   = [
+      - "subnet-0f279f9ce9a3aad8f",
+      - "subnet-0c3a7cdc3fc45150b",
+    ] -> null
+  - region              = "ap-south-1" -> null
+  - vpc_id              = "vpc-0fe9e1acc5cd69f39" -> null
+aws_route_table_association.public[1]: Destroying... [id=rtbassoc-0a005237bce3d5a0d]
+aws_eks_addon.core["kube-proxy"]: Destroying... [id=pantrypulse-eks:kube-proxy]
+aws_eks_addon.core["eks-pod-identity-agent"]: Destroying... [id=pantrypulse-eks:eks-pod-identity-agent]
+aws_route_table_association.public[0]: Destroying... [id=rtbassoc-060d989dbe8e7525e]
+aws_route_table_association.private[1]: Destroying... [id=rtbassoc-0eda64b12ddac5aa1]
+aws_iam_role_policy_attachment.ebs_csi: Destroying... [id=pantrypulse-eks-ebs-csi/arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy]
+aws_route_table_association.private[0]: Destroying... [id=rtbassoc-05af075f263c8d3e1]
+aws_route.public_internet: Destroying... [id=r-rtb-02c4000cc36dc7a091080289494]
+aws_eks_addon.core["metrics-server"]: Destroying... [id=pantrypulse-eks:metrics-server]
+aws_eks_addon.core["coredns"]: Destroying... [id=pantrypulse-eks:coredns]
+aws_route_table_association.public[0]: Destruction complete after 0s
+aws_route_table_association.private[0]: Destruction complete after 0s
+aws_route_table_association.private[1]: Destruction complete after 0s
+aws_route_table.private: Destroying... [id=rtb-0cefa6ac28159d1f4]
+aws_route_table_association.public[1]: Destruction complete after 0s
+aws_route.public_internet: Destruction complete after 0s
+aws_route_table.public: Destroying... [id=rtb-02c4000cc36dc7a09]
+aws_internet_gateway.main: Destroying... [id=igw-0d0390fd9b157296d]
+aws_route_table.private: Destruction complete after 0s
+aws_route_table.public: Destruction complete after 1s
+aws_iam_role_policy_attachment.ebs_csi: Destruction complete after 1s
+aws_iam_role.ebs_csi: Destroying... [id=pantrypulse-eks-ebs-csi]
+aws_eks_addon.core["eks-pod-identity-agent"]: Destruction complete after 1s
+aws_eks_addon.core["kube-proxy"]: Destruction complete after 1s
+aws_iam_role.ebs_csi: Destruction complete after 0s
+aws_eks_addon.core["coredns"]: Destruction complete after 2s
+aws_eks_addon.core["metrics-server"]: Destruction complete after 4s
+aws_eks_node_group.main: Destroying... [id=pantrypulse-eks:pantrypulse-nodes]
+aws_internet_gateway.main: Still destroying... [id=igw-0d0390fd9b157296d, 00m10s elapsed]
+aws_eks_node_group.main: Still destroying... [id=pantrypulse-eks:pantrypulse-nodes, 00m10s elapsed]
+aws_internet_gateway.main: Still destroying... [id=igw-0d0390fd9b157296d, 00m20s elapsed]
+aws_eks_node_group.main: Still destroying... [id=pantrypulse-eks:pantrypulse-nodes, 00m20s elapsed]
+aws_internet_gateway.main: Still destroying... [id=igw-0d0390fd9b157296d, 00m30s elapsed]
+aws_eks_node_group.main: Still destroying... [id=pantrypulse-eks:pantrypulse-nodes, 00m30s elapsed]
+aws_internet_gateway.main: Still destroying... [id=igw-0d0390fd9b157296d, 00m40s elapsed]
+aws_eks_node_group.main: Still destroying... [id=pantrypulse-eks:pantrypulse-nodes, 00m40s elapsed]
+aws_internet_gateway.main: Still destroying... [id=igw-0d0390fd9b157296d, 00m50s elapsed]
+aws_eks_node_group.main: Still destroying... [id=pantrypulse-eks:pantrypulse-nodes, 00m50s elapsed]
+aws_internet_gateway.main: Still destroying... [id=igw-0d0390fd9b157296d, 01m00s elapsed]
+aws_eks_node_group.main: Still destroying... [id=pantrypulse-eks:pantrypulse-nodes, 01m00s elapsed]
+aws_internet_gateway.main: Still destroying... [id=igw-0d0390fd9b157296d, 01m10s elapsed]
+aws_eks_node_group.main: Still destroying... [id=pantrypulse-eks:pantrypulse-nodes, 01m10s elapsed]
+aws_internet_gateway.main: Still destroying... [id=igw-0d0390fd9b157296d, 01m20s elapsed]
+aws_eks_node_group.main: Still destroying... [id=pantrypulse-eks:pantrypulse-nodes, 01m20s elapsed]
+aws_internet_gateway.main: Still destroying... [id=igw-0d0390fd9b157296d, 01m30s elapsed]
+aws_eks_node_group.main: Still destroying... [id=pantrypulse-eks:pantrypulse-nodes, 01m30s elapsed]
+aws_internet_gateway.main: Still destroying... [id=igw-0d0390fd9b157296d, 01m40s elapsed]
+aws_internet_gateway.main: Destruction complete after 1m42s
+aws_eks_node_group.main: Still destroying... [id=pantrypulse-eks:pantrypulse-nodes, 01m40s elapsed]
+aws_eks_node_group.main: Still destroying... [id=pantrypulse-eks:pantrypulse-nodes, 01m50s elapsed]
+
+# run 1 above was interrupted (local machine low on memory) after the node group and IGW were deleted; destroy re-run:
+$ terraform -chdir=terraform destroy -auto-approve
+aws_vpc.main: Refreshing state... [id=vpc-0fe9e1acc5cd69f39]
+aws_iam_role.cluster: Refreshing state... [id=pantrypulse-eks-cluster-role]
+aws_iam_role.node: Refreshing state... [id=pantrypulse-eks-node-role]
+aws_subnet.private[0]: Refreshing state... [id=subnet-0a8adf599629a7ef5]
+aws_subnet.public[1]: Refreshing state... [id=subnet-0c3a7cdc3fc45150b]
+aws_subnet.private[1]: Refreshing state... [id=subnet-0cd10c228cae5df2d]
+aws_subnet.public[0]: Refreshing state... [id=subnet-0f279f9ce9a3aad8f]
+aws_iam_role_policy_attachment.cluster: Refreshing state... [id=pantrypulse-eks-cluster-role/arn:aws:iam::aws:policy/AmazonEKSClusterPolicy]
+aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"]: Refreshing state... [id=pantrypulse-eks-node-role/arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy]
+aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]: Refreshing state... [id=pantrypulse-eks-node-role/arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly]
+aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"]: Refreshing state... [id=pantrypulse-eks-node-role/arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy]
+aws_eks_cluster.main: Refreshing state... [id=pantrypulse-eks]
+aws_eks_addon.vpc_cni: Refreshing state... [id=pantrypulse-eks:vpc-cni]
+aws_eks_node_group.main: Refreshing state... [id=pantrypulse-eks:pantrypulse-nodes]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # aws_eks_addon.vpc_cni will be destroyed
+  - resource "aws_eks_addon" "vpc_cni" {
+      - addon_name                  = "vpc-cni" -> null
+      - addon_version               = "v1.22.4-eksbuild.3" -> null
+      - arn                         = "arn:aws:eks:ap-south-1:189393508581:addon/pantrypulse-eks/vpc-cni/4ed0a278-1c0e-ebe4-6596-3d9f331f4dba" -> null
+      - cluster_name                = "pantrypulse-eks" -> null
+      - configuration_values        = jsonencode(
+            {
+              - env = {
+                  - ENABLE_PREFIX_DELEGATION = "true"
+                  - WARM_PREFIX_TARGET       = "1"
+                }
+            }
+        ) -> null
+      - created_at                  = "2026-10-16T13:39:16Z" -> null
+      - id                          = "pantrypulse-eks:vpc-cni" -> null
+      - modified_at                 = "2026-10-16T13:39:22Z" -> null
+      - region                      = "ap-south-1" -> null
+      - resolve_conflicts_on_create = "OVERWRITE" -> null
+      - resolve_conflicts_on_update = "OVERWRITE" -> null
+      - tags                        = {} -> null
+      - tags_all                    = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+        # (1 unchanged attribute hidden)
+
+      - namespace_config {
+          - namespace = "kube-system" -> null
+        }
+    }
+
+  # aws_eks_cluster.main will be destroyed
+  - resource "aws_eks_cluster" "main" {
+      - arn                           = "arn:aws:eks:ap-south-1:189393508581:cluster/pantrypulse-eks" -> null
+      - bootstrap_self_managed_addons = true -> null
+      - certificate_authority         = [
+          - {
+              - data = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURNVENDQWhtZ0F3SUJBZ0lRYnJnZklONkNrZENobTZvTWVhQXpFakFOQmdrcWhraUc5dzBCQVFzRkFEQW4KTVJBd0RnWURWUVFLRXdkQlYxTWdSVXRUTVJNd0VRWURWUVFERXdwcmRXSmxjbTVsZEdWek1CNFhEVEkyTVRBeApOakV5TlRRek1Wb1hEVE14TVRBeE5URXlOVFF6TVZvd0p6RVFNQTRHQTFVRUNoTUhRVmRUSUVWTFV6RVRNQkVHCkExVUVBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUIKQU5tTlluTDJRVnlBMC93SytUOUl5eG9zcEd1WDlWSS9SZ1NxMks3cjBwTm1TSHVJdVRBWWpWWVoxbXdlMXlYdQpHSGtQVVpLSS8rSnZtRjRtUWRTdzJ0c3JRS3Q0OStUWHVxM2dhNk95eDhXc0tKUEtkNnhVOTlMOUtpY1hWb2VrCk9TbXQxNmtacTR5N29zNXNGTEpSZmR4ME0wWlUyS0xBU2VQcllRRjl2cFVyVnlzRzZIQTNEWDN6TkJmVXVWd1UKZkNKN24vR2dZVkQxbEdPcXJMNHg4QUd0c2FmVjkvdkFaN0pscHc1UWg0TUJ6WlVSdmFaY1pkSmZFUENPY0ppeQp4OWVRb1pWd2RBZ2pmOXkyYXdQQ2NvNDdlR1psL2NFTFFmWFZMNlhMZGpvNE90ZmhxVkMvZ2MrWE5mK0tZR25UCkgwYy9PbzE0YUN5cFRJY3hlOThZNjZzQ0F3RUFBYU5aTUZjd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWQKRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZDOXVRRzk2RW9XdEJVM3hsYUxZSXNFNlhuOEVNQlVHQTFVZApFUVFPTUF5Q0NtdDFZbVZ5Ym1WMFpYTXdEUVlKS29aSWh2Y05BUUVMQlFBRGdnRUJBRXVPaUI4WnBJN2lLeVh6CnRndm10R2dzUHpPVnVvZXJveUE0YTJZQ1ZBZzM3Y2h5Vnl0T0FjemQxemp3S0ZuelkxNzR2SlpWVkt5cGF3aVUKdHlwbHU0L1RKQWhPYzdnWFpEQjZpSmJTdFlNT3h6bDJyR1BPV1gyNWp2OE1HVkw1Ukwvamg0WFdtRU4yY3EzdApsMzBlOW9YVzQzb3duUXdPZnhpK2s0RTdsUkYxaHRNVU80K0dGTWJyL2dVYkkrd25wdktGY1o5S1hOb2xvV0o1CnBiNWFpTHVuYSthQmRQK3EwWS9uRVRSV0YyTk9UOVFtNlJEV012T1kxdmduWU1hbFo5bE5BbVVWSHF3UUlEd1IKYUszQU1OLzB4UCtId0Y3QXlEZXFXQlpzZDZqL2FOeEhZdEFHOFE5TGtlcm5TZ2NSZWJsV0RqYzlFRnJWMWRHMwp0ZEkvMjRzPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+            },
+        ] -> null
+      - created_at                    = "2026-10-16T12:54:24Z" -> null
+      - deletion_protection           = false -> null
+      - enabled_cluster_log_types     = [] -> null
+      - endpoint                      = "https://D9C349B6BF9159761EE7490246039C57.gr7.ap-south-1.eks.amazonaws.com" -> null
+      - id                            = "pantrypulse-eks" -> null
+      - identity                      = [
+          - {
+              - oidc = [
+                  - {
+                      - issuer = "https://oidc.eks.ap-south-1.amazonaws.com/id/D9C349B6BF9159761EE7490246039C57"
+                    },
+                ]
+            },
+        ] -> null
+      - name                          = "pantrypulse-eks" -> null
+      - platform_version              = "eks.24" -> null
+      - region                        = "ap-south-1" -> null
+      - role_arn                      = "arn:aws:iam::189393508581:role/pantrypulse-eks-cluster-role" -> null
+      - status                        = "ACTIVE" -> null
+      - tags                          = {} -> null
+      - tags_all                      = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+      - version                       = "1.35" -> null
+
+      - access_config {
+          - authentication_mode                         = "API" -> null
+          - bootstrap_cluster_creator_admin_permissions = true -> null
+        }
+
+      - compute_config {
+          - enabled       = false -> null
+          - node_pools    = [] -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - control_plane_scaling_config {
+          - tier = "standard" -> null
+        }
+
+      - kube_api_server_config {
+          - event_ttl = "60m" -> null
+
+          - service_node_port_range {
+              - max_port = 32767 -> null
+              - min_port = 30000 -> null
+            }
+        }
+
+      - kube_controller_manager_config {
+          - horizontal_pod_autoscaler_controller_config {
+              - horizontal_pod_autoscaler_sync_period = "15s" -> null
+            }
+          - pod_gc_controller_config {
+              - terminated_pod_gc_threshold = 12500 -> null
+            }
+        }
+
+      - kube_scheduler_config {
+          - node_resources_fit {
+              - scoring_strategy {
+                  - type = "LeastAllocated" -> null
+
+                  - resource {
+                      - name   = "cpu" -> null
+                      - weight = 1 -> null
+                    }
+                  - resource {
+                      - name   = "memory" -> null
+                      - weight = 1 -> null
+                    }
+                }
+            }
+        }
+
+      - kubernetes_network_config {
+          - ip_family         = "ipv4" -> null
+          - service_ipv4_cidr = "172.20.0.0/16" -> null
+            # (1 unchanged attribute hidden)
+
+          - elastic_load_balancing {
+              - enabled = false -> null
+            }
+        }
+
+      - storage_config {
+          - block_storage {
+              - enabled = false -> null
+            }
+        }
+
+      - upgrade_policy {
+          - support_type = "EXTENDED" -> null
+        }
+
+      - vpc_config {
+          - cluster_security_group_id = "sg-0fc024f563bfc519f" -> null
+          - control_plane_egress_mode = "AWS_MANAGED" -> null
+          - endpoint_private_access   = true -> null
+          - endpoint_public_access    = true -> null
+          - public_access_cidrs       = [
+              - "202.131.133.37/32",
+            ] -> null
+          - security_group_ids        = [] -> null
+          - subnet_ids                = [
+              - "subnet-0a8adf599629a7ef5",
+              - "subnet-0c3a7cdc3fc45150b",
+              - "subnet-0cd10c228cae5df2d",
+              - "subnet-0f279f9ce9a3aad8f",
+            ] -> null
+          - vpc_id                    = "vpc-0fe9e1acc5cd69f39" -> null
+        }
+    }
+
+  # aws_iam_role.cluster will be destroyed
+  - resource "aws_iam_role" "cluster" {
+      - arn                   = "arn:aws:iam::189393508581:role/pantrypulse-eks-cluster-role" -> null
+      - assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = [
+                          - "sts:AssumeRole",
+                          - "sts:TagSession",
+                        ]
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "eks.amazonaws.com"
+                        }
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - create_date           = "2026-10-16T12:54:19Z" -> null
+      - force_detach_policies = false -> null
+      - id                    = "pantrypulse-eks-cluster-role" -> null
+      - managed_policy_arns   = [
+          - "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
+        ] -> null
+      - max_session_duration  = 3600 -> null
+      - name                  = "pantrypulse-eks-cluster-role" -> null
+      - path                  = "/" -> null
+      - tags                  = {} -> null
+      - tags_all              = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+      - unique_id             = "AROASYGF3TDSQQUZLN7IN" -> null
+        # (3 unchanged attributes hidden)
+    }
+
+  # aws_iam_role.node will be destroyed
+  - resource "aws_iam_role" "node" {
+      - arn                   = "arn:aws:iam::189393508581:role/pantrypulse-eks-node-role" -> null
+      - assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "sts:AssumeRole"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "ec2.amazonaws.com"
+                        }
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - create_date           = "2026-10-16T12:54:19Z" -> null
+      - force_detach_policies = false -> null
+      - id                    = "pantrypulse-eks-node-role" -> null
+      - managed_policy_arns   = [
+          - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
+          - "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
+          - "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
+        ] -> null
+      - max_session_duration  = 3600 -> null
+      - name                  = "pantrypulse-eks-node-role" -> null
+      - path                  = "/" -> null
+      - tags                  = {} -> null
+      - tags_all              = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+      - unique_id             = "AROASYGF3TDSR7MSBY7PD" -> null
+        # (3 unchanged attributes hidden)
+    }
+
+  # aws_iam_role_policy_attachment.cluster will be destroyed
+  - resource "aws_iam_role_policy_attachment" "cluster" {
+      - id         = "pantrypulse-eks-cluster-role/arn:aws:iam::aws:policy/AmazonEKSClusterPolicy" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy" -> null
+      - role       = "pantrypulse-eks-cluster-role" -> null
+    }
+
+  # aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"] will be destroyed
+  - resource "aws_iam_role_policy_attachment" "node" {
+      - id         = "pantrypulse-eks-node-role/arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly" -> null
+      - role       = "pantrypulse-eks-node-role" -> null
+    }
+
+  # aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"] will be destroyed
+  - resource "aws_iam_role_policy_attachment" "node" {
+      - id         = "pantrypulse-eks-node-role/arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy" -> null
+      - role       = "pantrypulse-eks-node-role" -> null
+    }
+
+  # aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"] will be destroyed
+  - resource "aws_iam_role_policy_attachment" "node" {
+      - id         = "pantrypulse-eks-node-role/arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy" -> null
+      - role       = "pantrypulse-eks-node-role" -> null
+    }
+
+  # aws_subnet.private[0] will be destroyed
+  - resource "aws_subnet" "private" {
+      - arn                                            = "arn:aws:ec2:ap-south-1:189393508581:subnet/subnet-0a8adf599629a7ef5" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "ap-south-1a" -> null
+      - availability_zone_id                           = "aps1-az1" -> null
+      - cidr_block                                     = "10.42.128.0/20" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-0a8adf599629a7ef5" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = false -> null
+      - owner_id                                       = "189393508581" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - region                                         = "ap-south-1" -> null
+      - tags                                           = {
+          - "Name"                                  = "pantrypulse-private-ap-south-1a"
+          - "Tier"                                  = "private"
+          - "kubernetes.io/cluster/pantrypulse-eks" = "shared"
+          - "kubernetes.io/role/internal-elb"       = "1"
+        } -> null
+      - tags_all                                       = {
+          - "Environment"                           = "demo"
+          - "ManagedBy"                             = "terraform"
+          - "Name"                                  = "pantrypulse-private-ap-south-1a"
+          - "Owner"                                 = "Pratyush Mishra"
+          - "Project"                               = "pantrypulse"
+          - "Repository"                            = "github.com/PratyushMishra-2nd/DevopsProject"
+          - "Tier"                                  = "private"
+          - "kubernetes.io/cluster/pantrypulse-eks" = "shared"
+          - "kubernetes.io/role/internal-elb"       = "1"
+        } -> null
+      - vpc_id                                         = "vpc-0fe9e1acc5cd69f39" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # aws_subnet.private[1] will be destroyed
+  - resource "aws_subnet" "private" {
+      - arn                                            = "arn:aws:ec2:ap-south-1:189393508581:subnet/subnet-0cd10c228cae5df2d" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "ap-south-1b" -> null
+      - availability_zone_id                           = "aps1-az3" -> null
+      - cidr_block                                     = "10.42.144.0/20" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-0cd10c228cae5df2d" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = false -> null
+      - owner_id                                       = "189393508581" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - region                                         = "ap-south-1" -> null
+      - tags                                           = {
+          - "Name"                                  = "pantrypulse-private-ap-south-1b"
+          - "Tier"                                  = "private"
+          - "kubernetes.io/cluster/pantrypulse-eks" = "shared"
+          - "kubernetes.io/role/internal-elb"       = "1"
+        } -> null
+      - tags_all                                       = {
+          - "Environment"                           = "demo"
+          - "ManagedBy"                             = "terraform"
+          - "Name"                                  = "pantrypulse-private-ap-south-1b"
+          - "Owner"                                 = "Pratyush Mishra"
+          - "Project"                               = "pantrypulse"
+          - "Repository"                            = "github.com/PratyushMishra-2nd/DevopsProject"
+          - "Tier"                                  = "private"
+          - "kubernetes.io/cluster/pantrypulse-eks" = "shared"
+          - "kubernetes.io/role/internal-elb"       = "1"
+        } -> null
+      - vpc_id                                         = "vpc-0fe9e1acc5cd69f39" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # aws_subnet.public[0] will be destroyed
+  - resource "aws_subnet" "public" {
+      - arn                                            = "arn:aws:ec2:ap-south-1:189393508581:subnet/subnet-0f279f9ce9a3aad8f" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "ap-south-1a" -> null
+      - availability_zone_id                           = "aps1-az1" -> null
+      - cidr_block                                     = "10.42.0.0/20" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-0f279f9ce9a3aad8f" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = true -> null
+      - owner_id                                       = "189393508581" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - region                                         = "ap-south-1" -> null
+      - tags                                           = {
+          - "Name"                                  = "pantrypulse-public-ap-south-1a"
+          - "Tier"                                  = "public"
+          - "kubernetes.io/cluster/pantrypulse-eks" = "shared"
+          - "kubernetes.io/role/elb"                = "1"
+        } -> null
+      - tags_all                                       = {
+          - "Environment"                           = "demo"
+          - "ManagedBy"                             = "terraform"
+          - "Name"                                  = "pantrypulse-public-ap-south-1a"
+          - "Owner"                                 = "Pratyush Mishra"
+          - "Project"                               = "pantrypulse"
+          - "Repository"                            = "github.com/PratyushMishra-2nd/DevopsProject"
+          - "Tier"                                  = "public"
+          - "kubernetes.io/cluster/pantrypulse-eks" = "shared"
+          - "kubernetes.io/role/elb"                = "1"
+        } -> null
+      - vpc_id                                         = "vpc-0fe9e1acc5cd69f39" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # aws_subnet.public[1] will be destroyed
+  - resource "aws_subnet" "public" {
+      - arn                                            = "arn:aws:ec2:ap-south-1:189393508581:subnet/subnet-0c3a7cdc3fc45150b" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "ap-south-1b" -> null
+      - availability_zone_id                           = "aps1-az3" -> null
+      - cidr_block                                     = "10.42.16.0/20" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-0c3a7cdc3fc45150b" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = true -> null
+      - owner_id                                       = "189393508581" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - region                                         = "ap-south-1" -> null
+      - tags                                           = {
+          - "Name"                                  = "pantrypulse-public-ap-south-1b"
+          - "Tier"                                  = "public"
+          - "kubernetes.io/cluster/pantrypulse-eks" = "shared"
+          - "kubernetes.io/role/elb"                = "1"
+        } -> null
+      - tags_all                                       = {
+          - "Environment"                           = "demo"
+          - "ManagedBy"                             = "terraform"
+          - "Name"                                  = "pantrypulse-public-ap-south-1b"
+          - "Owner"                                 = "Pratyush Mishra"
+          - "Project"                               = "pantrypulse"
+          - "Repository"                            = "github.com/PratyushMishra-2nd/DevopsProject"
+          - "Tier"                                  = "public"
+          - "kubernetes.io/cluster/pantrypulse-eks" = "shared"
+          - "kubernetes.io/role/elb"                = "1"
+        } -> null
+      - vpc_id                                         = "vpc-0fe9e1acc5cd69f39" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # aws_vpc.main will be destroyed
+  - resource "aws_vpc" "main" {
+      - arn                                  = "arn:aws:ec2:ap-south-1:189393508581:vpc/vpc-0fe9e1acc5cd69f39" -> null
+      - assign_generated_ipv6_cidr_block     = false -> null
+      - cidr_block                           = "10.42.0.0/16" -> null
+      - default_network_acl_id               = "acl-0e92c7cf571fe6880" -> null
+      - default_route_table_id               = "rtb-0b30b0f0ccecc30c7" -> null
+      - default_security_group_id            = "sg-0681190fa6ffe039b" -> null
+      - dhcp_options_id                      = "dopt-0d694d37cb9cb718e" -> null
+      - enable_dns_hostnames                 = true -> null
+      - enable_dns_support                   = true -> null
+      - enable_network_address_usage_metrics = false -> null
+      - id                                   = "vpc-0fe9e1acc5cd69f39" -> null
+      - instance_tenancy                     = "default" -> null
+      - ipv6_netmask_length                  = 0 -> null
+      - main_route_table_id                  = "rtb-0b30b0f0ccecc30c7" -> null
+      - owner_id                             = "189393508581" -> null
+      - region                               = "ap-south-1" -> null
+      - tags                                 = {
+          - "Name" = "pantrypulse-vpc"
+        } -> null
+      - tags_all                             = {
+          - "Environment" = "demo"
+          - "ManagedBy"   = "terraform"
+          - "Name"        = "pantrypulse-vpc"
+          - "Owner"       = "Pratyush Mishra"
+          - "Project"     = "pantrypulse"
+          - "Repository"  = "github.com/PratyushMishra-2nd/DevopsProject"
+        } -> null
+        # (4 unchanged attributes hidden)
+    }
+
+Plan: 0 to add, 0 to change, 13 to destroy.
+
+Changes to Outputs:
+  - cluster_endpoint    = "https://D9C349B6BF9159761EE7490246039C57.gr7.ap-south-1.eks.amazonaws.com" -> null
+  - cluster_name        = "pantrypulse-eks" -> null
+  - cluster_version     = "1.35" -> null
+  - configure_kubectl   = "aws eks update-kubeconfig --region ap-south-1 --name pantrypulse-eks" -> null
+  - nat_gateway_enabled = false -> null
+  - node_group_name     = "pantrypulse-nodes" -> null
+  - private_subnet_ids  = [
+      - "subnet-0a8adf599629a7ef5",
+      - "subnet-0cd10c228cae5df2d",
+    ] -> null
+  - public_subnet_ids   = [
+      - "subnet-0f279f9ce9a3aad8f",
+      - "subnet-0c3a7cdc3fc45150b",
+    ] -> null
+  - region              = "ap-south-1" -> null
+  - vpc_id              = "vpc-0fe9e1acc5cd69f39" -> null
+aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"]: Destroying... [id=pantrypulse-eks-node-role/arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy]
+aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]: Destroying... [id=pantrypulse-eks-node-role/arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly]
+aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"]: Destroying... [id=pantrypulse-eks-node-role/arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy]
+aws_eks_addon.vpc_cni: Destroying... [id=pantrypulse-eks:vpc-cni]
+aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]: Destruction complete after 1s
+aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"]: Destruction complete after 1s
+aws_iam_role_policy_attachment.node["arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"]: Destruction complete after 1s
+aws_iam_role.node: Destroying... [id=pantrypulse-eks-node-role]
+aws_eks_addon.vpc_cni: Destruction complete after 2s
+aws_eks_cluster.main: Destroying... [id=pantrypulse-eks]
+aws_iam_role.node: Destruction complete after 1s
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 00m10s elapsed]
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 00m20s elapsed]
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 00m30s elapsed]
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 00m40s elapsed]
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 00m50s elapsed]
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 01m00s elapsed]
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 01m10s elapsed]
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 01m20s elapsed]
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 01m30s elapsed]
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 01m40s elapsed]
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 01m50s elapsed]
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 02m00s elapsed]
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 02m10s elapsed]
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 02m20s elapsed]
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 02m30s elapsed]
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 02m40s elapsed]
+aws_eks_cluster.main: Still destroying... [id=pantrypulse-eks, 02m50s elapsed]
+aws_eks_cluster.main: Destruction complete after 2m52s
+aws_subnet.private[1]: Destroying... [id=subnet-0cd10c228cae5df2d]
+aws_subnet.public[0]: Destroying... [id=subnet-0f279f9ce9a3aad8f]
+aws_subnet.public[1]: Destroying... [id=subnet-0c3a7cdc3fc45150b]
+aws_subnet.private[0]: Destroying... [id=subnet-0a8adf599629a7ef5]
+aws_iam_role_policy_attachment.cluster: Destroying... [id=pantrypulse-eks-cluster-role/arn:aws:iam::aws:policy/AmazonEKSClusterPolicy]
+aws_subnet.private[1]: Destruction complete after 2s
+aws_subnet.private[0]: Destruction complete after 2s
+aws_subnet.public[0]: Destruction complete after 2s
+aws_subnet.public[1]: Destruction complete after 2s
+aws_vpc.main: Destroying... [id=vpc-0fe9e1acc5cd69f39]
+aws_iam_role_policy_attachment.cluster: Destruction complete after 2s
+aws_iam_role.cluster: Destroying... [id=pantrypulse-eks-cluster-role]
+aws_vpc.main: Destruction complete after 0s
+aws_iam_role.cluster: Destruction complete after 1s
+
+Destroy complete! Resources: 13 destroyed.
+
+[exited with code 0]
+
+$ aws eks list-clusters --region ap-south-1
+{
+    "clusters": []
+}
+$ aws ec2 describe-vpcs --region ap-south-1 --filters Name=tag:Project,Values=pantrypulse --query 'Vpcs[].VpcId'
+[]
+$ aws ec2 describe-instances --region ap-south-1 --filters Name=tag:Project,Values=pantrypulse Name=instance-state-name,Values=pending,running,stopping,stopped --query 'Reservations[].Instances[].InstanceId'
+[]
+$ terraform -chdir=terraform state list | wc -l
+0

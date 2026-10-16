@@ -1,11 +1,10 @@
 # Runbook: provision, deploy and destroy on AWS EKS
 
-> **Status (2026-10-16):** the network part (VPC, 2 public + 2 private
-> subnets, IGW, route tables) was applied to AWS with `-target` and then
-> destroyed. The EKS part has **not** been run: the AWS IAM user available
-> for this project has no `eks:*` permissions and its guardrail policy only
-> allows `t2.micro`/`t3.micro` instances. See
-> [ADR 0007](../adr/0007-local-kind-as-the-demo-cluster.md) and
+> **Status: run on 2026-10-16** (apply, evidence, destroy). On that account
+> the node group used `node_instance_types = ["t3.micro"]` with 3 nodes
+> (the account only launches free-tier types), and the `aws-ebs-csi-driver`
+> add-on failed with `iam:PassRole` denied, so no PVC was used on EKS. The
+> application, Traefik and monitoring steps below were not run on EKS. See
 > [ADR 0008](../adr/0008-free-tier-ec2-k3s.md).
 
 ## What Terraform creates
@@ -23,7 +22,8 @@ object is visible in review. Region `ap-south-1`.
 - **EKS:**
   - EKS 1.35 with API access limited to `api_allowed_cidrs`.
   - Managed node group: `t3.medium` × 2 (min 1, max 3), 20 GB disks.
-  - Add-ons: vpc-cni, kube-proxy, coredns, eks-pod-identity-agent,
+  - Add-ons: vpc-cni (prefix delegation on, created before the node
+    group), kube-proxy, coredns, eks-pod-identity-agent,
     metrics-server (for the HPA), aws-ebs-csi-driver.
 
 Plan size: **29 resources to add**

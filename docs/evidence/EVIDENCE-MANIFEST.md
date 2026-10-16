@@ -80,7 +80,13 @@ Two notes on hosts and ports:
 | `screenshots/m7-aws-vpc-subnets.png` ← `transcripts/aws-vpc-describe.txt` | AWS CLI: caller identity, `pantrypulse-vpc` (10.42.0.0/16, available) and its 2 public + 2 private subnets in ap-south-1a/1b |
 | `screenshots/m7-terraform-destroy.png` ← `transcripts/aws-vpc-destroy.txt` | `Destroy complete! Resources: 13 destroyed`, then no `Project=pantrypulse` VPCs or instances left |
 | `transcripts/aws-ec2-k3s-apply.txt` | State and outputs of the free-tier EC2 + k3s stack (15 resources) applied the same day; destroyed after the app could not start on a CPU-credit-starved t3.micro ([ADR 0008](../adr/0008-free-tier-ec2-k3s.md)) |
-| **Not available** | EKS cluster and node group: the AWS IAM user has no EKS permissions. AWS Console screenshots: the evidence above is AWS CLI output |
+| `screenshots/m7-aws-console-vpc.png`, `m7-aws-console-subnets.png` | AWS Console (IAM user `pratyush-mishra`, Mumbai): `pantrypulse-vpc` Available and its 4 subnets |
+| `transcripts/aws-eks-plan.txt`, `aws-eks-apply.txt` | Real plan and first EKS apply: cluster created in 8m54s, node group `CREATE_FAILED` (`The specified instance type is not eligible for Free Tier`, t3.medium) |
+| `screenshots/m7-aws-eks-apply.png` ← `transcripts/aws-eks-apply-2.txt` | Retry with 3 × t3.micro and VPC CNI prefix delegation: node group created in 1m47s, core add-ons created; `aws-ebs-csi-driver` add-on denied (`iam:PassRole`) |
+| `screenshots/m7-aws-eks-kubectl.png` ← `transcripts/aws-eks-cluster.txt` | `describe-cluster` ACTIVE 1.35, node group ACTIVE t3.micro, `kubectl get nodes` (3 Ready), `kubectl get pods -A` (13 Running), `kubectl top nodes` |
+| `screenshots/m7-aws-console-eks-clusters.png`, `m7-aws-console-eks-nodes.png` | AWS Console: cluster `pantrypulse-eks` Active; Compute tab with 3 t3.micro nodes Ready in `pantrypulse-nodes` |
+| `screenshots/m7-terraform-destroy-eks.png` ← `transcripts/aws-eks-destroy.txt` | Destroy of the whole stack. The first run was stopped locally (machine low on memory) after deleting the node group and IGW; the re-run finished `Destroy complete! Resources: 13 destroyed`, then `list-clusters` = [], no VPCs, no instances, empty state |
+| `screenshots/m7-aws-console-eks-empty.png` | AWS Console after destroy: Clusters (0) |
 
 ### M8 Kubernetes, Helm, GitOps
 
