@@ -8,7 +8,7 @@ COPY . .
 RUN npm run build
 
 # ---- runtime stage: unprivileged Nginx serves dist/ and proxies /api ----
-FROM nginxinc/nginx-unprivileged:1.30-alpine3.24 AS runtime
+FROM nginxinc/nginx-unprivileged:1.31-alpine3.24 AS runtime
 ARG GIT_SHA=unknown
 LABEL org.opencontainers.image.title="pantrypulse-frontend" \
       org.opencontainers.image.description="PantryPulse web app (static React build on Nginx)" \
